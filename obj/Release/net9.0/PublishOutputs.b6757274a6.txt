@@ -1,8 +1,0 @@
-/Users/williamcouture/Personal/DOTNET/RunTracker/RunTracker/RunTracker
-/Users/williamcouture/Personal/DOTNET/RunTracker/RunTracker/appsettings.Development.json
-/Users/williamcouture/Personal/DOTNET/RunTracker/RunTracker/appsettings.json
-/Users/williamcouture/Personal/DOTNET/RunTracker/RunTracker/RunTracker.dll
-/Users/williamcouture/Personal/DOTNET/RunTracker/RunTracker/RunTracker.deps.json
-/Users/williamcouture/Personal/DOTNET/RunTracker/RunTracker/RunTracker.runtimeconfig.json
-/Users/williamcouture/Personal/DOTNET/RunTracker/RunTracker/RunTracker.pdb
-/Users/williamcouture/Personal/DOTNET/RunTracker/RunTracker/BlazorBootstrap.dll
