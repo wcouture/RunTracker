@@ -24,7 +24,7 @@
   padding: 20px;
   max-width: 100%;
   width: max-content;
-
+  color: rgb(221, 221, 221);
   font-weight: 200;
   transition: linear 0.2s;
 }
@@ -102,7 +102,6 @@ button:hover {
 }
 
 .custom-input {
-  width: 100%;
   border-radius: 10px;
   background-color: #424141;
   border: 2px solid #363636;

@@ -41,6 +41,7 @@ public partial class Edit : ComponentBase
             else
             {
                 _edittingRun = runResponse;
+                _runDate = DateTime.Parse(_edittingRun.Label ?? "");
             }
         }
         else
@@ -51,6 +52,9 @@ public partial class Edit : ComponentBase
 
     public async Task Submit()
     {
+        DateOnly runDate = DateOnly.FromDateTime(_runDate);
+        _edittingRun.Label = runDate.ToString();
+
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
 
         var runData = new StringContent(JsonSerializer.Serialize(_edittingRun), Encoding.UTF8, "application/json");

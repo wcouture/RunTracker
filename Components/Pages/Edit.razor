@@ -4,7 +4,7 @@
 <PageTitle>Edit Run</PageTitle>
 <div class="page-content">
     <div class="content-card">
-        <h1 class="content-card-title">Add Run</h1>
+        <h1 class="content-card-title">Edit Run</h1>
 
         <EditForm OnSubmit="Submit" FormName="AddRun" Model="_edittingRun">
             <div class="form-elements">
@@ -22,7 +22,7 @@
                 <div class="form-col">
                     <p class="col-header">Label</p>
                     <label>Date/Label:</label>
-                    <InputText class="custom-input" @bind-Value="_edittingRun.Label"/>
+                    <InputDate class="custom-input" @bind-Value="_runDate"/>
                 </div>
             </div>
             

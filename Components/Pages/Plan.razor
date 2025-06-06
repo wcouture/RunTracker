@@ -1,2 +1,49 @@
 @page "/plan"
 <PageTitle>Run Plan</PageTitle>
+
+<div class="page-content">
+    <div class="content-card">
+        <p class="content-card-title">Create Running Plan</p>
+        <form @formname="generate-plan" @onsubmit="Submit" method="post">
+            <AntiforgeryToken/>
+            <div class="plan-inputs-section">
+                <label>I want to run </label> 
+                <InputNumber style="max-width: 3em;" class="custom-input" @bind-Value="_goalMiles" />
+                <label>miles by </label>
+                <InputDate class="custom-input" @bind-Value="_goalDate" />.
+            </div>
+            <br>
+
+            <div class="plan-inputs-section">
+                <label>I can currently run </label>
+                <InputNumber style="max-width: 3em;" class="custom-input" @bind-Value="_currentMiles"/>
+                <label>miles with a time of </label>
+                <InputNumber style="max-width: 3em;" class="custom-input" @bind-Value="_currentDuration.Hours"/> <label>hours </label>
+                <InputNumber style="max-width: 3em;" class="custom-input" @bind-Value="_currentDuration.Minutes"/> <label>minutes </label>
+                <InputNumber style="max-width: 3em;" class="custom-input" @bind-Value="_currentDuration.Seconds"/> <label>seconds.</label>
+            </div>
+            <br>
+
+            <div class="plan-inputs-section">
+                <label>I want to run </label>
+                <InputNumber style="max-width: 3em;" class="custom-input" @bind-Value="_weeklyRuns"/>
+                <label> times per week,</label><label> and have long runs on </label>
+                <InputSelect class="custom-input" @bind-Value="_longRunDay">
+                    <option value="@DayOfWeek.Monday">Monday</option>
+                    <option value="@DayOfWeek.Tuesday">Tuesday</option>
+                    <option value="@DayOfWeek.Wednesday">Wednesday</option>
+                    <option value="@DayOfWeek.Thursday">Thursday</option>
+                    <option value="@DayOfWeek.Friday">Friday</option>
+                    <option value="@DayOfWeek.Saturday">Saturday</option>
+                    <option value="@DayOfWeek.Sunday">Sunday</option>
+                </InputSelect>.
+            </div>
+            <br>
+
+            <button type="submit" class="form-button">
+                Generate Plan
+            </button>
+        </form>
+        
+    </div>
+</div>

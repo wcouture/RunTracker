@@ -1,0 +1,5 @@
+.plan-input-section {
+  display: flex;
+  flex-wrap: wrap;
+  text-wrap: wrap;
+}
