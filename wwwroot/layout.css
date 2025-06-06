@@ -47,7 +47,7 @@
 
 @media (max-width: 768px) {
   .page-content {
-    max-width: 98%;
+    max-width: 100%;
     transition: linear 0.2s;
   }
 }
@@ -91,6 +91,7 @@ button:hover {
 }
 
 .form-button {
+  margin-top: 1em;
   padding: 0.5em;
   border-radius: 10px;
   font-weight: bold;
