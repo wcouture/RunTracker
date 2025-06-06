@@ -18,9 +18,9 @@
                 <label>I can currently run </label>
                 <InputNumber style="max-width: 3em;" class="custom-input" @bind-Value="_currentMiles"/>
                 <label>miles with a time of </label>
-                <InputNumber style="max-width: 3em;" class="custom-input" @bind-Value="_currentDuration.Hours"/> <label>hours </label>
-                <InputNumber style="max-width: 3em;" class="custom-input" @bind-Value="_currentDuration.Minutes"/> <label>minutes </label>
-                <InputNumber style="max-width: 3em;" class="custom-input" @bind-Value="_currentDuration.Seconds"/> <label>seconds.</label>
+                <InputNumber style="max-width: 3em;" class="custom-input" min="0" max="23" @bind-Value="_currentDuration.Hours"/> <label>hours </label>
+                <InputNumber style="max-width: 3em;" class="custom-input" min="0" max="59" @bind-Value="_currentDuration.Minutes"/> <label>minutes </label>
+                <InputNumber style="max-width: 3em;" class="custom-input" min="0" max="59" @bind-Value="_currentDuration.Seconds"/> <label>seconds.</label>
             </div>
             <br>
 

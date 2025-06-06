@@ -11,13 +11,13 @@
                 <div class="form-col">
                     <p class="col-header">Distance</p>
                     <label>Mileage:</label>
-                    <InputNumber class="custom-input" @bind-Value="_newRun!.Mileage"/>
+                    <InputNumber min="0" max="1000" class="custom-input" @bind-Value="_newRun!.Mileage"/>
                 </div>
                 <div class="form-col">
                     <p class="col-header">Duration</p>
-                    <label>Hours: </label><InputNumber class="custom-input" @bind-Value="_newRun!.Duration!.Hours"/>
-                    <label>Minutes: </label><InputNumber class="custom-input" @bind-Value="_newRun!.Duration!.Minutes"/>
-                    <label>Seconds: </label><InputNumber class="custom-input" @bind-Value="_newRun!.Duration!.Seconds"/>
+                    <label>Hours: </label><InputNumber min="0" max="23" class="custom-input" @bind-Value="_newRun!.Duration!.Hours"/>
+                    <label>Minutes: </label><InputNumber min="0" max="59" class="custom-input" @bind-Value="_newRun!.Duration!.Minutes"/>
+                    <label>Seconds: </label><InputNumber min="0" max="59" class="custom-input" @bind-Value="_newRun!.Duration!.Seconds"/>
                 </div>
                 <div class="form-col">
                     <p class="col-header">Label</p>
