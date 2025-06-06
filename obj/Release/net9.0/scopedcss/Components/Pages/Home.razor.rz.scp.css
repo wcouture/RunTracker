@@ -1,0 +1,86 @@
+/* Linechart */
+.bar-chart[b-hwssigiu9m] {
+  height: 100%;
+  width: max-content;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px solid grey;
+
+  overflow-x: scroll;
+  transition: linear 0.2s;
+}
+
+.bar-chart:hover[b-hwssigiu9m] {
+  box-shadow: 1px 1px 5px 1px #861da06a;
+  transition: linear 0.2s;
+}
+/* ------------------------------------ */
+
+/* Stats Card */
+.stats-container[b-hwssigiu9m] {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 1em;
+  color: #bebebe;
+}
+
+@media (max-width: 450px) {
+  .stats-container[b-hwssigiu9m] {
+    grid-template-columns: auto auto;
+  }
+}
+
+.stat-header[b-hwssigiu9m] {
+  text-align: center;
+  font-weight: normal;
+}
+
+.stat-detail[b-hwssigiu9m] {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .stat-header[b-hwssigiu9m] {
+    font-size: 10pt;
+  }
+
+  .stat-detail[b-hwssigiu9m] {
+    font-size: 10pt;
+  }
+}
+
+/* ------------------------------------ */
+
+/* Run Entries */
+.run-entries[b-hwssigiu9m] {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+  color: #ccc;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.entry-detail[b-hwssigiu9m] {
+  flex: 1;
+  text-align: start;
+  border-top: 1px solid rgba(137, 137, 137, 0.218);
+  padding: 0 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.entry-detail.header[b-hwssigiu9m] {
+  font-weight: normal;
+  margin-bottom: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .entry-detail[b-hwssigiu9m] {
+    font-size: 10pt;
+  }
+}
+
+/* ------------------------------------ */
+
+a[b-hwssigiu9m] {
+  color: inherit;
+}
