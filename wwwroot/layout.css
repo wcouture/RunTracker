@@ -3,11 +3,8 @@
 .content {
   padding-top: 1.1rem;
   padding-bottom: 10vh;
-  /* background: url("/debut-light.png"); */
   background-color: #1b1b22;
-  background-attachment: fixed;
   height: max-content;
-  min-height: 100vh;
   width: 100%;
 }
 
