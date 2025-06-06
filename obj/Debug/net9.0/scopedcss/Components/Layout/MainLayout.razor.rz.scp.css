@@ -1,0 +1,71 @@
+.page[b-mg2me8q3pm],
+main[b-mg2me8q3pm] {
+  height: 100%;
+  width: 100%;
+}
+
+.sidebar[b-mg2me8q3pm] {
+  background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+}
+
+.top-row[b-mg2me8q3pm] {
+  background-color: #14141a;
+  border-bottom: 1px solid #1b1b22;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.add-run[b-mg2me8q3pm] {
+  margin-right: 25px;
+  color: rgb(255, 255, 255);
+  background-color: #781990;
+  padding: 5px 10px;
+  border: 1px solid rgb(34, 34, 34);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: linear 0.2s;
+}
+
+.add-run:hover[b-mg2me8q3pm] {
+  box-shadow: 1px 1px 5px 1px rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+  transition: linear 0.2s;
+}
+
+.page-title[b-mg2me8q3pm] {
+  margin: 0;
+  padding: 5px 10px;
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  transition: linear 0.1s;
+}
+
+.page-title:hover[b-mg2me8q3pm] {
+  text-decoration: none;
+  scale: 105%;
+  transition: linear 0.1s;
+}
+
+#blazor-error-ui[b-mg2me8q3pm] {
+  color-scheme: light only;
+  background: lightyellow;
+  bottom: 0;
+  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  display: none;
+  left: 0;
+  padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+#blazor-error-ui .dismiss[b-mg2me8q3pm] {
+  cursor: pointer;
+  position: absolute;
+  right: 0.75rem;
+  top: 0.5rem;
+}

@@ -1,0 +1,86 @@
+/* Linechart */
+.bar-chart {
+  height: 100%;
+  width: max-content;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px solid grey;
+
+  overflow-x: scroll;
+  transition: linear 0.2s;
+}
+
+.bar-chart:hover {
+  box-shadow: 1px 1px 5px 1px #861da06a;
+  transition: linear 0.2s;
+}
+/* ------------------------------------ */
+
+/* Stats Card */
+.stats-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 1em;
+  color: #bebebe;
+}
+
+@media (max-width: 450px) {
+  .stats-container {
+    grid-template-columns: auto auto;
+  }
+}
+
+.stat-header {
+  text-align: center;
+  font-weight: normal;
+}
+
+.stat-detail {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .stat-header {
+    font-size: 10pt;
+  }
+
+  .stat-detail {
+    font-size: 10pt;
+  }
+}
+
+/* ------------------------------------ */
+
+/* Run Entries */
+.run-entries {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+  color: #ccc;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.entry-detail {
+  flex: 1;
+  text-align: start;
+  border-top: 1px solid rgba(137, 137, 137, 0.218);
+  padding: 0 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.entry-detail.header {
+  font-weight: normal;
+  margin-bottom: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .entry-detail {
+    font-size: 10pt;
+  }
+}
+
+/* ------------------------------------ */
+
+a {
+  color: inherit;
+}

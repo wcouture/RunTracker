@@ -1,0 +1,60 @@
+﻿@page "/"
+@using RunTracker.Models
+@rendermode InteractiveServer
+<PageTitle>Home</PageTitle>
+<div class="page-content">
+    <div class="content-card">
+        <div class="bar-chart">
+        <LineChart Width="350" WidthUnit="Unit.Px" @ref="lineChart"/>
+        </div>
+    </div>
+    
+
+    <div class="content-card">
+        <p class="content-card-title">Running Statistics</p>
+
+        <div class="stats-container">
+            <div class="stat-box">
+                <p class="stat-header">Avg Pace</p>
+                <p class="stat-detail">@_averagePace</p>
+            </div>
+
+            <div class="stat-box">
+                <p class="stat-header">Avg Distance</p>
+                <p class="stat-detail">@_averageDistance.ToString("N2") mi</p>
+            </div>
+
+            <div class="stat-box">
+                <p class="stat-header">Top Pace</p>
+                <p class="stat-detail">@_topPace</p>
+            </div>
+
+            <div class="stat-box">
+                <p class="stat-header">Top Distance</p>
+                <p class="stat-detail">@_topDistance.ToString("N2") mi</p>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="content-card">
+        <p class="content-card-title">Run Entries</p>
+
+        <div class="run-entries">
+            <p class="header entry-detail"> </p>
+            <p class="header entry-detail">Edit</p>
+            <p class="header entry-detail">Label</p>
+            <p class="header entry-detail">Mileage</p>
+            <p class="header entry-detail">Duration</p>
+            <p class="header entry-detail">Pace</p>
+            @foreach (Run run in _runList ?? []) {
+                <p class="entry-detail"><a href="/delete/@run.Id"><Icon Name="IconName.X"/></a></p>
+                <p class="entry-detail"><a href="/edit/@run.Id"><Icon Name="IconName.PencilSquare"/></a></p>
+                <p class="entry-detail">@run.Label</p>
+                <p class="entry-detail">@run.Mileage mi</p>
+                <p class="entry-detail">@run.Duration</p>
+                <p class="entry-detail">@Run.Pace(run)</p>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+@page "/edit/{Id:int}"
+@rendermode InteractiveServer
+
+<PageTitle>Edit Run</PageTitle>
+<div class="page-content">
+    <div class="content-card">
+        <h1 class="content-card-title">Add Run</h1>
+
+        <EditForm OnSubmit="Submit" FormName="AddRun" Model="_edittingRun">
+            <div class="form-elements">
+                <div class="form-col">
+                    <p class="col-header">Distance</p>
+                    <label>Mileage:</label>
+                    <InputNumber class="custom-input" @bind-Value="_edittingRun!.Mileage"/>
+                </div>
+                <div class="form-col">
+                    <p class="col-header">Duration</p>
+                    <label>Hours: </label><InputNumber class="custom-input" @bind-Value="_edittingRun!.Duration!.Hours"/>
+                    <label>Minutes: </label><InputNumber class="custom-input" @bind-Value="_edittingRun!.Duration!.Minutes"/>
+                    <label>Seconds: </label><InputNumber class="custom-input" @bind-Value="_edittingRun!.Duration!.Seconds"/>
+                </div>
+                <div class="form-col">
+                    <p class="col-header">Label</p>
+                    <label>Date/Label:</label>
+                    <InputText class="custom-input" @bind-Value="_edittingRun.Label"/>
+                </div>
+            </div>
+            
+
+            <button class="form-button" type="submit">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+@* <h1>Edit Run</h1>
+<p>Editing Run: @Id</p>
+
+<form method="PUT" @onsubmit="Submit" @formname="run-add-form">
+    <AntiforgeryToken />
+    <table>
+        <tr>
+            <th>Distance</th>
+            <th>Duration</th>
+            <th>Label</th>
+        </tr>
+        <tr>
+            <td>
+                <InputNumber @bind-Value="_edittingRun!.Mileage"/>
+            </td>
+            <td>
+                <InputNumber @bind-Value="_edittingRun!.Duration!.Hours"/>
+                <InputNumber @bind-Value="_edittingRun!.Duration!.Minutes"/>
+                <InputNumber @bind-Value="_edittingRun!.Duration!.Seconds"/>
+            </td>
+            <td>
+                <InputText @bind-Value="_edittingRun!.Label"/>
+            </td>
+        </tr>
+        <tr>
+            <td><button type="submit">Submit</button></td>
+        </tr>
+    </table>
+</form> *@

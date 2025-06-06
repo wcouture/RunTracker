@@ -1,0 +1,30 @@
+.confirm-buttons[b-014anhnpsy] {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-button[b-014anhnpsy] {
+  margin: 0 auto;
+}
+
+.run-details[b-014anhnpsy] {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  color: #d5d5d5;
+}
+
+.detail-header[b-014anhnpsy] {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.detail[b-014anhnpsy] {
+  border-top: 1px solid #3b3d54;
+}
+
+.detail[b-014anhnpsy],
+.detail-header[b-014anhnpsy] {
+  color: inherit;
+  padding: 0.25em 1em;
+}
