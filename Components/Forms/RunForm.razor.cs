@@ -23,7 +23,7 @@ public partial class RunForm
 
     private string _formHeader = "Add Run";
     private string _postUrl = "/run";
-    private HttpClient _httpClient = null;
+    private HttpClient _httpClient = null!;
     private Func<string?, HttpContent?, CancellationToken, Task<HttpResponseMessage>> _httpFunction = null;
 
     protected override async Task OnInitializedAsync()
