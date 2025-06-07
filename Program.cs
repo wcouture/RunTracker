@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using RunTracker.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,9 +7,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddBlazorBootstrap();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => {
+        options.Cookie.Name = "RunTrackerAuth";
+        options.LoginPath = "/login";
+        options.AccessDeniedPath = "/access-denied";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+    });
 
-builder.Services.AddHttpClient("RunTracker", httpClient =>
+builder.Services.AddBlazorBootstrap();
+builder.Services.AddAuthorization();
+builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddHttpClient("RunTracker", (serviceProvider, httpClient) =>
 {
     httpClient.BaseAddress = new Uri("https://runtrackerapi-deebfxdpbjdmdsh5.canadaeast-01.azurewebsites.net/");
 });
@@ -25,6 +36,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseAntiforgery();
 

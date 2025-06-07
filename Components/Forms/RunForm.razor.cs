@@ -61,6 +61,7 @@ public partial class RunForm
     protected override async Task OnInitializedAsync()
     {   
         _httpClient = HttpClientFactory.CreateClient("RunTracker");
+        
         if (RunId != 0)
         {
             await InitializeData();
