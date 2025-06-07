@@ -7,20 +7,24 @@ namespace RunTracker.Components.Forms;
 
 public partial class RunForm
 {
-    [Parameter]
-    public int RunId { get; set; }
-
+    // Injects and dependencies
     [Inject]
     public required NavigationManager NavManager { get; set; }
 
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }
 
+    // Parameters
+    [Parameter]
+    public int RunId { get; set; }
+
+    // SupplyParameterFromForm
     [SupplyParameterFromForm]
     private Run? _run { get; set; } = new() { Duration = new() };
     [SupplyParameterFromForm]
     private DateTime _runDate { get; set; } = DateTime.Today;
 
+    // Private fields
     private string _formHeader = "Add Run";
     private string _postUrl = "/run";
     private HttpClient _httpClient = null!;
