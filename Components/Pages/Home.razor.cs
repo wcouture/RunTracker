@@ -6,6 +6,9 @@ namespace RunTracker.Components.Pages;
 
 public partial class Home : ComponentBase
 {
+    [CascadingParameter]
+    public required HttpContext HttpContext { get; set; }
+
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }
 
@@ -105,6 +108,7 @@ public partial class Home : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
+
         await LoadRunData();
     }
 

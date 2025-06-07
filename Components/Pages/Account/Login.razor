@@ -6,24 +6,29 @@
 @using RunTracker.Models
 @inject NavigationManager NavManager
 
-<h1>Login</h1>
-<p>Please enter your username and password to login.</p>
+<div class="page-content">
+    <div class="content-card">
+        <h1 class="content-card-title">
+            Login
+        </h1>
+        <EditForm FormName="LoginForm" OnSubmit="HandleLogin" Model="@UserAccount">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <InputText class="custom-input" @bind-Value="UserAccount.Username" placeholder="username"/>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText class="custom-input" type="password" @bind-Value="UserAccount.Password" placeholder="password"/>
+            </div>
+            <button type="submit" class="form-button">Login</button>
+        </EditForm>
+    </div>
+</div>
 
-<EditForm FormName="LoginForm" OnSubmit="HandleLogin" Model="@UserAccount">
-    <div class="form-group">
-        <label for="username">Username</label>
-        <InputText @bind-Value="UserAccount.Username" placeholder="username"/>
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <InputText type="password" @bind-Value="UserAccount.Password" placeholder="password"/>
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
-</EditForm>
 
 @code {
     [CascadingParameter]
-    public HttpContext? HttpContext { get; set; }
+    public required HttpContext HttpContext { get; set; }
 
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }

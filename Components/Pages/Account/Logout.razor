@@ -1,8 +1,14 @@
 @page "/logout"
 @using Microsoft.AspNetCore.Authentication
 
-<h1>Logout</h1>
-<p>You have been logged out.</p>
+<div class="page-content">
+    <div class="content-card">
+        <h1 class="content-card-title">
+            Logout
+        </h1>
+        <p>You have been logged out.</p>
+    </div>
+</div>
 
 @code {
     [CascadingParameter]
@@ -14,7 +20,7 @@
     protected override async Task OnInitializedAsync() {
         if (HttpContext?.User.Identity?.IsAuthenticated ?? false) {
             await HttpContext.SignOutAsync();
-            NavManager.NavigateTo("/");
+            NavManager.NavigateTo("/logout", true);
         }
     }
 }
