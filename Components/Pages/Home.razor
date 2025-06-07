@@ -1,11 +1,11 @@
 ﻿@page "/"
 @using RunTracker.Models
-@rendermode InteractiveServer
+
 <PageTitle>Home</PageTitle>
 <div class="page-content">
     <div class="content-card">
         <div class="bar-chart">
-        <LineChart Width="350" WidthUnit="Unit.Px" @ref="lineChart"/>
+        <LineChart Width="350" WidthUnit="Unit.Px" @ref="lineChart" Id="@UserId.ToString()"/>
         </div>
     </div>
     

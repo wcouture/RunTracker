@@ -1,19 +1,22 @@
 using RunTracker.Models;
 using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
+using System.Security.Claims;
+using RunTracker.Components.Layout;
 
 namespace RunTracker.Components.Pages;
 
 public partial class Home : ComponentBase
 {
-    [CascadingParameter]
-    public required HttpContext HttpContext { get; set; }
-
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }
 
     [Inject]
     public required NavigationManager NavManager { get; set; }
+
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+    public int UserId {get; set;}
 
     private IEnumerable<Run>? _runList;
     
@@ -60,7 +63,6 @@ public partial class Home : ComponentBase
         lineChartOptions.IndexAxis = "x";
         lineChartOptions.Layout.Padding = 0;
         
-
         lineChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Run", Color="grey", Display = true };
         lineChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Pace (Minutes)", Color="grey", Display = true };
         lineChartOptions.Scales.X.Grid = new ChartAxesGrid() { Color = "rgba(255, 255, 255, 0.3)" };
@@ -74,19 +76,51 @@ public partial class Home : ComponentBase
 
     private async Task LoadRunData()
     {
-        var httpClient = HttpClientFactory.CreateClient("RunTracker");
-
-        using HttpResponseMessage response = await httpClient.GetAsync("/runs");
-
-        if (response.IsSuccessStatusCode)
+        if (UserId == 0)
         {
-            _runList = await response.Content.ReadFromJsonAsync<IEnumerable<Run>>();
-            InitializeChartData();
-            SetRunStats();
+            return;
         }
-        else
+
+        try
         {
-            Console.WriteLine($"Failed to load run list. Status Code: {response.StatusCode}");
+            var httpClient = HttpClientFactory.CreateClient("RunTracker");
+
+            using HttpResponseMessage response = await httpClient.GetAsync($"/runs/{UserId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                _runList = await response.Content.ReadFromJsonAsync<IEnumerable<Run>>();
+                InitializeChartData();
+                SetRunStats();
+            }
+            else
+            {
+                Console.WriteLine($"Failed to load run list. Status Code: {response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in LoadRunData: {ex.Message}");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (HttpContext?.User?.Identity?.IsAuthenticated ?? false)
+            {   
+                Claim? userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim is not null)
+                {
+                    UserId = int.Parse(userIdClaim.Value);
+                    await LoadRunData();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in OnInitializedAsync: {ex.Message}");
         }
     }
 
@@ -95,21 +129,14 @@ public partial class Home : ComponentBase
         if (chartData is null)
         {
             await LoadRunData();
-            InitializeChartData();
         }
 
-        if (firstRender)
+        if (firstRender && chartData is not null && UserId != 0)
         {
-            await lineChart.InitializeAsync(chartData ?? new ChartData(), lineChartOptions);
+            await lineChart.InitializeAsync(chartData, lineChartOptions);
         }
+        
         await base.OnAfterRenderAsync(firstRender);
-    }
-
-
-    protected override async Task OnInitializedAsync()
-    {
-
-        await LoadRunData();
     }
 
     private void SetRunStats()
@@ -141,10 +168,8 @@ public partial class Home : ComponentBase
             }
         }
 
-
         _averageDistance = totalDistance / _runList?.Count() ?? 0;
         _topDistance = maxDistance;
-
         _topPace = minPace;
 
         double totalPaceValue = Duration.MinuteValue(totalPace);
@@ -155,6 +180,5 @@ public partial class Home : ComponentBase
         int seconds = (int)((avgPaceValue - Math.Floor(avgPaceValue)) * 60);
 
         _averagePace = new Duration() { Hours = hours, Minutes = minutes, Seconds = seconds };
-
     }
 }

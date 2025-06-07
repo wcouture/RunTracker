@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using RunTracker.Components;
 using RunTracker.Services;
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddServerSideBlazor();
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => {
@@ -25,7 +28,8 @@ builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 builder.Services.AddHttpClient("RunTracker", (serviceProvider, httpClient) =>
 {
-    httpClient.BaseAddress = new Uri("https://runtrackerapi-deebfxdpbjdmdsh5.canadaeast-01.azurewebsites.net/");
+    httpClient.BaseAddress = new Uri("http://localhost:5239");
+    //new Uri("https://runtrackerapi-deebfxdpbjdmdsh5.canadaeast-01.azurewebsites.net/");
 });
 
 var app = builder.Build();

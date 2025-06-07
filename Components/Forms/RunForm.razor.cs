@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components;
@@ -26,6 +27,8 @@ namespace RunTracker.Components.Forms;
 /// </remarks>
 public partial class RunForm
 {
+    [CascadingParameter]
+    public required HttpContext HttpContext { get; set; }
     // Injects and dependencies
     [Inject]
     public required NavigationManager NavManager { get; set; }
@@ -94,24 +97,30 @@ public partial class RunForm
     /// </remarks>
     public async Task InitializeData() {
 
-        using HttpResponseMessage response = await _httpClient.GetAsync("/run/" + RunId);
-        if (response.IsSuccessStatusCode)
-        {
-            var runResponse = await response.Content.ReadFromJsonAsync<Run>();
-            if (runResponse is null)
+        try {
+            string url = "/run/" + RunId;
+            using HttpResponseMessage response = await _httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Failed to load run object with id: {id}", RunId);
+                var runResponse = await response.Content.ReadFromJsonAsync<Run>();
+                if (runResponse is null)
+                {
+                    Console.WriteLine("Failed to load run object with id: {id}", RunId);
+                }
+                else
+                {
+                    _run = runResponse;
+                    _runDate = DateTime.Parse(_run.Label ?? "");
+                }
             }
             else
             {
-                _run = runResponse;
-                Console.WriteLine(_run);
-                _runDate = DateTime.Parse(_run.Label ?? "");
+                Console.WriteLine("Failed request run entry for id: {id}", RunId);
             }
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("Failed request run entry for id: {id}", RunId);
+            Console.WriteLine($"Error in InitializeData: {ex.Message}");
         }
     }
 
@@ -133,6 +142,7 @@ public partial class RunForm
             return;
 
         _run.Label = DateOnly.FromDateTime(_runDate).ToString();
+        _run.UserId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
 
         var jsonData = new StringContent(JsonSerializer.Serialize(_run), Encoding.UTF8, "application/json");
         using HttpResponseMessage response = await _httpFunction(_postUrl, jsonData, CancellationToken.None);
