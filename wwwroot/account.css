@@ -1,0 +1,15 @@
+.account-form {
+  display: grid;
+  gap: 1rem;
+  color: inherit;
+}
+
+.account-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.account-form-text {
+  color: grey;
+}

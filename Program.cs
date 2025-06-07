@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using RunTracker.Components;
+using RunTracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
+
+// Add password hasher service
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 builder.Services.AddHttpClient("RunTracker", (serviceProvider, httpClient) =>
 {

@@ -1,17 +1,16 @@
-@page "/login"
+@page "/register"
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using Microsoft.AspNetCore.Components.Authorization
-@using RunTracker.Models
 @inject NavigationManager NavManager
 
 <div class="page-content">
     <div class="content-card">
         <h1 class="content-card-title">
-            Login
+            Register
         </h1>
-        <EditForm class="account-form" FormName="LoginForm" OnSubmit="HandleLogin" Model="@UserAccount">
+        <EditForm class="account-form" FormName="RegisterForm" OnSubmit="HandleRegister" Model="@UserAccount">
             <div class="account-form-group">
                 <label for="username">Username</label>
                 <InputText class="custom-input" required @bind-Value="UserAccount.Username" placeholder="username"/>
@@ -20,16 +19,14 @@
                 <label for="password">Password</label>
                 <InputText class="custom-input" type="password" required @bind-Value="UserAccount.Password" placeholder="password"/>
             </div>
-            <button type="submit" class="form-button">Login</button>
+            <button type="submit" class="form-button">Register</button>
         </EditForm>
-        <p class="account-form-text">Don't have an account? <a class="form-link"href="/register">Register</a></p>
+        <p class="account-form-text">Already have an account? <a class="form-link"href="/login">Login</a></p>
     </div>
 </div>
 
 
 @code {
-    [CascadingParameter]
-    public required HttpContext HttpContext { get; set; }
 
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }
@@ -39,21 +36,16 @@
     [SupplyParameterFromForm]
     public UserAccount UserAccount { get; set; } = new UserAccount();
 
-    public async Task HandleLogin() {
+    public async Task HandleRegister() {
         UserAccount.Password = PasswordHasher.HashPassword(UserAccount.Password);
+        
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var response = await httpClient.PostAsJsonAsync("/user", UserAccount);
+        var response = await httpClient.PostAsJsonAsync("/register", UserAccount);
         if (response.IsSuccessStatusCode) {
-            List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.Name, UserAccount.Username ?? ""),
-                new Claim(ClaimTypes.Role, "User")
-            };
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(principal);
-            NavManager.NavigateTo("/");
+            NavManager.NavigateTo("/login");
         }
         else {
+
             Console.WriteLine(response.StatusCode);
         }
     }

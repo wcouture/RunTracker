@@ -102,6 +102,7 @@ button:hover {
 }
 
 .custom-input {
+  padding: 0.5em;
   border-radius: 10px;
   background-color: #424141;
   border: 2px solid #363636;

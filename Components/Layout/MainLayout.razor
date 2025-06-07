@@ -10,18 +10,27 @@
 
     protected override void OnInitialized() {
         if (!HttpContext?.User.Identity?.IsAuthenticated ?? true) {
-            if (NavManager.Uri.Contains("/access-denied") || NavManager.Uri.Contains("/login") || NavManager.Uri.Contains("/logout")) {
+            if (NavManager.Uri.Contains("/access-denied") || 
+                NavManager.Uri.Contains("/login") || 
+                NavManager.Uri.Contains("/logout") || 
+                NavManager.Uri.Contains("/register") || 
+                NavManager.Uri.Contains("/intro")) {
                 return;
             }
-            NavManager.NavigateTo("/access-denied", true);
+            NavManager.NavigateTo("/intro", true);
         }
     }
 }
 
 <div class="top-row">
     <a class="page-title" href="/">Run Tracker</a>
-    <a class="add-run" href="/add">Add Run</a>
-    @* <a class="add-run" href="/plan">Plan</a> *@
+    <div class="nav-links">
+        <a class="" href="/add">Add Run</a>
+        <a class="" href="/plan">Plan</a>
+        @if (HttpContext?.User.Identity?.IsAuthenticated ?? false) {
+            <a class="" href="/logout">Logout</a>
+        }
+    </div>
 </div>
 
 <div class="page">
