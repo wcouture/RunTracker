@@ -37,7 +37,7 @@
     public UserAccount UserAccount { get; set; } = new UserAccount();
 
     public async Task HandleRegister() {
-        UserAccount.Password = PasswordHasher.HashPassword(UserAccount.Password);
+        UserAccount.Password = PasswordHasher.HashPassword(UserAccount!.Password!);
         
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
         var response = await httpClient.PostAsJsonAsync("/register", UserAccount);

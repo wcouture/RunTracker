@@ -40,7 +40,7 @@
     public UserAccount UserAccount { get; set; } = new UserAccount();
 
     public async Task HandleLogin() {
-        UserAccount.Password = PasswordHasher.HashPassword(UserAccount.Password);
+        UserAccount.Password = PasswordHasher.HashPassword(UserAccount!.Password!);
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
         var response = await httpClient.PostAsJsonAsync("/user", UserAccount);
         if (response.IsSuccessStatusCode) {
