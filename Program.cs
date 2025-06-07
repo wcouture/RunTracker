@@ -28,8 +28,14 @@ builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 builder.Services.AddHttpClient("RunTracker", (serviceProvider, httpClient) =>
 {
-    httpClient.BaseAddress = new Uri("http://localhost:5239");
-    //new Uri("https://runtrackerapi-deebfxdpbjdmdsh5.canadaeast-01.azurewebsites.net/");
+    if (builder.Environment.IsDevelopment())
+    {
+        httpClient.BaseAddress = new Uri("http://localhost:5239");
+    }
+    else
+    {
+        httpClient.BaseAddress = new Uri("https://runtrackerapi-deebfxdpbjdmdsh5.canadaeast-01.azurewebsites.net/");
+    }
 });
 
 var app = builder.Build();
