@@ -3,45 +3,49 @@
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using Microsoft.AspNetCore.Components.Authorization
+@using RunTracker.Models
+@inject NavigationManager NavManager
 
 <h1>Login</h1>
 <p>Please enter your username and password to login.</p>
 
-<EditForm method="post">
+<EditForm FormName="LoginForm" OnSubmit="HandleLogin" Model="@UserAccount">
     <div class="form-group">
         <label for="username">Username</label>
-        <InputText @bind-Value="Username" placeholder="username"/>
+        <InputText @bind-Value="UserAccount.Username" placeholder="username"/>
     </div>
     <div class="form-group">
         <label for="password">Password</label>
-        <InputText type="password" @bind-Value="Password" placeholder="password"/>
+        <InputText type="password" @bind-Value="UserAccount.Password" placeholder="password"/>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
 </EditForm>
 
 @code {
-    [Inject]
-    public required NavigationManager NavManager {get; set;}
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
 
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }
-    [Inject]
-    public required HttpContext HttpContext {get;set;}
 
     [SupplyParameterFromForm]
-    public string Username { get; set; } = string.Empty;
-    [SupplyParameterFromForm]
-    public string Password { get; set; } = string.Empty;
+    public UserAccount UserAccount { get; set; } = new UserAccount();
 
     public async Task HandleLogin() {
-
-        List<Claim> claims = new List<Claim> {
-            new Claim(ClaimTypes.Name, Username),
-            new Claim(ClaimTypes.Role, "User")
-        };
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
-        await HttpContext.SignInAsync(principal);
-        NavManager.NavigateTo("/");
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        var response = await httpClient.PostAsJsonAsync("/user", UserAccount);
+        if (response.IsSuccessStatusCode) {
+            List<Claim> claims = new List<Claim> {
+                new Claim(ClaimTypes.Name, UserAccount.Username ?? ""),
+                new Claim(ClaimTypes.Role, "User")
+            };
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(principal);
+            NavManager.NavigateTo("/");
+        }
+        else {
+            Console.WriteLine(response.StatusCode);
+        }
     }
 }

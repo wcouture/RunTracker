@@ -1,6 +1,19 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+
+@code {
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+}
+
 <div class="top-row">
     <a class="page-title" href="/">Run Tracker</a>
+    @if (HttpContext?.User.Identity?.IsAuthenticated ?? false) {
+        <a class="logout" href="/logout">Logout</a>
+    }
+    else {
+        <a class="login" href="/login">Login</a>
+    }
     <a class="add-run" href="/add">Add Run</a>
     @* <a class="add-run" href="/plan">Plan</a> *@
 </div>
