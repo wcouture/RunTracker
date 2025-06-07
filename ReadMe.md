@@ -23,6 +23,6 @@ A modern web application for tracking and analyzing your running progress. Built
 
 - **Frontend**: Blazor Pages
 - **Backend**: .NET Core
-- **Server**: [RunTrackerAPI]("https://github.com/wcouture/RunTrackerAPI")
+- **Server**: [RunTrackerAPI](https://github.com/wcouture/RunTrackerAPI)
 - **UI Components**: Blazor Bootstrap
 - **Charts**: Chart.js
