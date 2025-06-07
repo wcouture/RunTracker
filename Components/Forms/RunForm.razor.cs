@@ -36,6 +36,8 @@ public partial class RunForm
     // Parameters
     [Parameter]
     public int RunId { get; set; }
+    [Parameter]
+    public Run? Run { get; set; }
 
     // SupplyParameterFromForm
     [SupplyParameterFromForm]
@@ -68,6 +70,15 @@ public partial class RunForm
         }
         else
         {
+            if (Run is not null){
+                // Set the form fields to the provided run data
+                _run!.Mileage = Run.Mileage;
+                _run.Duration!.Hours = Run.Duration!.Hours;
+                _run.Duration!.Minutes = Run.Duration!.Minutes;
+                _run.Duration!.Seconds = Run.Duration!.Seconds;
+                _run.Label = Run.Label;
+                _runDate = DateTime.Parse(Run.Label ?? "");
+            }
             _httpFunction = _httpClient.PostAsync;
         }
     }
