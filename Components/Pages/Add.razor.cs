@@ -27,25 +27,4 @@ public partial class Add : ComponentBase
         _newRun ??= new();
         _newRun.Duration ??= new();
     }
-
-    public async Task Submit()
-    {
-        if (_newRun is null)
-            return;
-
-        _newRun.Label = DateOnly.FromDateTime(_runDate).ToString();
-
-        var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var jsonData = new StringContent(JsonSerializer.Serialize(_newRun), Encoding.UTF8, "application/json");
-        using HttpResponseMessage response = await httpClient.PostAsync("/run", jsonData);
-
-        if (response.IsSuccessStatusCode)
-        {
-            NavManager.NavigateTo("/");
-        }
-        else
-        {
-            Console.WriteLine($"Failed to add run. Status code: {response.StatusCode}");
-        }
-    }
 }

@@ -26,47 +26,46 @@ public partial class Edit : ComponentBase
         _runDate = new DateTime();
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+    //public async Task InitializeData() {
+        // var httpClient = HttpClientFactory.CreateClient("RunTracker");
 
-        using HttpResponseMessage response = await httpClient.GetAsync("/run/" + Id);
-        if (response.IsSuccessStatusCode)
-        {
-            var runResponse = await response.Content.ReadFromJsonAsync<Run>();
-            if (runResponse is null)
-            {
-                Console.WriteLine("Failed to load run object with id: {id}", Id);
-            }
-            else
-            {
-                _edittingRun = runResponse;
-                _runDate = DateTime.Parse(_edittingRun.Label ?? "");
-            }
-        }
-        else
-        {
-            Console.WriteLine("Failed request run entry for id: {id}", Id);
-        }
-    }
+        // using HttpResponseMessage response = await httpClient.GetAsync("/run/" + Id);
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     var runResponse = await response.Content.ReadFromJsonAsync<Run>();
+        //     if (runResponse is null)
+        //     {
+        //         Console.WriteLine("Failed to load run object with id: {id}", Id);
+        //     }
+        //     else
+        //     {
+        //         _edittingRun = runResponse;
+        //         Console.WriteLine(_edittingRun);
+        //         _runDate = DateTime.Parse(_edittingRun.Label ?? "");
+        //     }
+        // }
+        // else
+        // {
+        //     Console.WriteLine("Failed request run entry for id: {id}", Id);
+        // }
+    //}
+    // public async Task Submit()
+    // {
+    //     DateOnly runDate = DateOnly.FromDateTime(_runDate);
+    //     _edittingRun.Label = runDate.ToString();
 
-    public async Task Submit()
-    {
-        DateOnly runDate = DateOnly.FromDateTime(_runDate);
-        _edittingRun.Label = runDate.ToString();
+    //     var httpClient = HttpClientFactory.CreateClient("RunTracker");
 
-        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+    //     var runData = new StringContent(JsonSerializer.Serialize(_edittingRun), Encoding.UTF8, "application/json");
+    //     using HttpResponseMessage response = await httpClient.PutAsync("/run/" + Id.ToString(), runData);
 
-        var runData = new StringContent(JsonSerializer.Serialize(_edittingRun), Encoding.UTF8, "application/json");
-        using HttpResponseMessage response = await httpClient.PutAsync("/run/" + Id.ToString(), runData);
-
-        if (response.IsSuccessStatusCode)
-        {
-            NavigationManager.NavigateTo("/");
-        }
-        else
-        {
-            Console.WriteLine("Failed to update run entry for id: {id}\n{run}", Id, _edittingRun);
-        }
-    }
+    //     if (response.IsSuccessStatusCode)
+    //     {
+    //         NavigationManager.NavigateTo("/");
+    //     }
+    //     else
+    //     {
+    //         Console.WriteLine("Failed to update run entry for id: {id}\n{run}", Id, _edittingRun);
+    //     }
+    // }
 }
