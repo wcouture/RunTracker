@@ -4,7 +4,26 @@ using Microsoft.AspNetCore.Components;
 using RunTracker.Models;
 
 namespace RunTracker.Components.Forms;
-
+/// <summary>
+/// The RunForm component is responsible for handling the creation and editing of run entries in the application.
+/// It provides a form interface for users to input run details including distance, duration, and date/label.
+/// </summary>
+/// <remarks>
+/// This component serves two primary purposes:
+/// 1. Creating new run entries when RunId is not provided
+/// 2. Editing existing run entries when RunId is specified
+/// 
+/// The component dynamically adjusts its behavior based on whether it's being used for creation or editing:
+/// - For new entries, it uses POST requests to create new runs
+/// - For existing entries, it uses PUT requests to update runs
+/// 
+/// The form includes fields for:
+/// - Distance (mileage)
+/// - Duration (hours, minutes, seconds)
+/// - Date/Label
+/// 
+/// The component handles form submission, data validation, and navigation after successful operations.
+/// </remarks>
 public partial class RunForm
 {
     // Injects and dependencies
@@ -30,6 +49,13 @@ public partial class RunForm
     private HttpClient _httpClient = null!;
     private Func<string?, HttpContent?, CancellationToken, Task<HttpResponseMessage>> _httpFunction = null!;
 
+    /// <summary>
+    /// Initializes the component and sets up the HTTP client and request function based on whether the form is being used for creation or editing.
+    /// </summary>
+    /// <remarks>
+    /// This method is called when the component is initialized. It creates the HTTP client and sets up the request function
+    /// based on whether the form is being used for creation or editing.
+    /// </remarks>
     protected override async Task OnInitializedAsync()
     {   
         _httpClient = HttpClientFactory.CreateClient("RunTracker");
@@ -46,6 +72,14 @@ public partial class RunForm
         }
     }
 
+    /// <summary>
+    /// Initializes the form data by fetching the run entry with the specified ID from the server.
+    /// If successful, populates the form with the run data and sets the run date from the label.
+    /// </summary>
+    /// <remarks>
+    /// This method is called when editing an existing run entry. It makes a GET request to fetch the run data
+    /// and updates the form fields accordingly. If the request fails, an error message is logged to the console.
+    /// </remarks>
     public async Task InitializeData() {
 
         using HttpResponseMessage response = await _httpClient.GetAsync("/run/" + RunId);
@@ -69,6 +103,18 @@ public partial class RunForm
         }
     }
 
+
+    /// <summary>
+    /// Handles the form submission by sending the run data to the server.
+    /// </summary>
+    /// <remarks>
+    /// This method is called when the form is submitted. It:
+    /// - Updates the run label with the formatted date
+    /// - Serializes the run data to JSON
+    /// - Sends a POST or PUT request to the server depending on whether this is a new or existing run
+    /// - Navigates to the home page on success
+    /// - Logs an error message to the console on failure
+    /// </remarks>
     public async Task HandleSubmit()
     {
         if (_run is null)

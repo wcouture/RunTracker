@@ -7,32 +7,7 @@
     <RunForm RunId="@Id"/>
 </div>
 
-@* <h1>Edit Run</h1>
-<p>Editing Run: @Id</p>
-
-<form method="PUT" @onsubmit="Submit" @formname="run-add-form">
-    <AntiforgeryToken />
-    <table>
-        <tr>
-            <th>Distance</th>
-            <th>Duration</th>
-            <th>Label</th>
-        </tr>
-        <tr>
-            <td>
-                <InputNumber @bind-Value="_edittingRun!.Mileage"/>
-            </td>
-            <td>
-                <InputNumber @bind-Value="_edittingRun!.Duration!.Hours"/>
-                <InputNumber @bind-Value="_edittingRun!.Duration!.Minutes"/>
-                <InputNumber @bind-Value="_edittingRun!.Duration!.Seconds"/>
-            </td>
-            <td>
-                <InputText @bind-Value="_edittingRun!.Label"/>
-            </td>
-        </tr>
-        <tr>
-            <td><button type="submit">Submit</button></td>
-        </tr>
-    </table>
-</form> *@
+@code {
+    [Parameter]
+    public int Id { get; set; }
+}
