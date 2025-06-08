@@ -8,8 +8,8 @@ main {
   background-color: #14141a;
   border-bottom: 1px solid #1b1b22;
   justify-content: space-between;
-  align-items: flex-end;
   height: 3.5rem;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
 }
@@ -33,7 +33,6 @@ main {
 
 .page-title {
   margin: 0;
-  padding: 5px 10px;
   color: rgb(255, 255, 255);
   text-decoration: none;
   transition: linear 0.1s;
