@@ -14,8 +14,8 @@
         </h1>
         <EditForm class="account-form" FormName="LoginForm" OnSubmit="HandleLogin" Model="@UserAccount">
             <div class="account-form-group">
-                <label for="username">Username</label>
-                <InputText class="custom-input" required @bind-Value="UserAccount.Username" placeholder="username"/>
+                <label for="email">Email</label>
+                <InputText class="custom-input" required @bind-Value="UserAccount.Email" placeholder="email"/>
             </div>
             <div class="account-form-group">
                 <label for="password">Password</label>
@@ -40,7 +40,7 @@
 
     public async Task HandleLogin() {
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var response = await httpClient.PostAsJsonAsync("/user", UserAccount);
+        var response = await httpClient.PostAsJsonAsync("/login", UserAccount);
         if (response.IsSuccessStatusCode) {
             UserAccount newAccount = await response.Content.ReadFromJsonAsync<UserAccount>() ?? new UserAccount();
             List<Claim> claims = new List<Claim> {

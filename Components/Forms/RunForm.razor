@@ -1,8 +1,14 @@
 <div class="content-card">
         <h1 class="content-card-title">@_formHeader</h1>
 
-        <EditForm OnSubmit="HandleSubmit" FormName="AddRun" Model="_run">
+        <EditForm FormName="RunForm" OnSubmit="HandleSubmit" Model="@_run">
+            <DataAnnotationsValidator />
             <div class="form-elements">
+                <div class="form-col">
+                    <p class="col-header">Label</p>
+                    <label>Label:</label>
+                    <InputText class="custom-input" @bind-Value="_run!.Label"/>
+                </div>
                 <div class="form-col">
                     <p class="col-header">Distance</p>
                     <label>Mileage:</label>
@@ -15,13 +21,12 @@
                     <label>Seconds: </label><InputNumber min="0" max="59" class="custom-input" @bind-Value="_run!.Duration!.Seconds"/>
                 </div>
                 <div class="form-col">
-                    <p class="col-header">Label</p>
-                    <label>Date/Label:</label>
-                    <InputDate class="custom-input" @bind-Value="_runDate"/>
+                    <p class="col-header">Date</p>
+                    <label>Date:</label>
+                    <InputDate class="custom-input" @bind-Value="_run!.Date"/>
                 </div>
             </div>
             
-
             <button class="form-button" type="submit">Submit</button>
         </EditForm>
     </div>

@@ -43,6 +43,7 @@
         <div class="run-entries">
             <p class="header entry-detail"> </p>
             <p class="header entry-detail">Edit</p>
+            <p class="header entry-detail">Date</p>
             <p class="header entry-detail">Label</p>
             <p class="header entry-detail">Mileage</p>
             <p class="header entry-detail">Duration</p>
@@ -50,6 +51,7 @@
             @foreach (Run run in _runList ?? []) {
                 <p class="entry-detail"><a href="/delete/@run.Id"><Icon Name="IconName.X"/></a></p>
                 <p class="entry-detail"><a href="/edit/@run.Id"><Icon Name="IconName.PencilSquare"/></a></p>
+                <p class="entry-detail">@run.Date.ToString("MM/dd/yyyy")</p>
                 <p class="entry-detail">@run.Label</p>
                 <p class="entry-detail">@run.Mileage mi</p>
                 <p class="entry-detail">@run.Duration</p>

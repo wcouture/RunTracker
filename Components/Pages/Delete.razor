@@ -6,14 +6,17 @@
     <div class="content-card">
         <h5 class="content-card-title">Are you sure you want to delete this run?</h5>
         <div class="run-details">
+            <p class="detail-header">Date</p>
             <p class="detail-header">Label</p>
             <p class="detail-header">Mileage</p>
             <p class="detail-header">Duration</p>
             <p class="detail-header">Pace</p>
+            <p class="detail">@_deleteRun.Date.ToString("MM/dd/yyyy")</p>
             <p class="detail">@_deleteRun.Label</p>
             <p class="detail">@_deleteRun.Mileage</p>
             <p class="detail">@_deleteRun.Duration</p>
             <p class="detail">@Run.Pace(_deleteRun)</p>
+            
         </div>
         <div class="confirm-buttons">
             <button class="form-button" @onclick="Confirm">Confirm</button>

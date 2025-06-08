@@ -39,14 +39,9 @@ public partial class RunForm
     // Parameters
     [Parameter]
     public int RunId { get; set; }
-    [Parameter]
-    public Run? Run { get; set; }
 
-    // SupplyParameterFromForm
     [SupplyParameterFromForm]
-    private Run? _run { get; set; } = new() { Duration = new() };
-    [SupplyParameterFromForm]
-    private DateTime _runDate { get; set; } = DateTime.Today;
+    private Run _run { get; set; } = new() { Duration = new(), Date = DateTime.Today };
 
     // Private fields
     private string _formHeader = "Add Run";
@@ -74,15 +69,7 @@ public partial class RunForm
         }
         else
         {
-            if (Run is not null){
-                // Set the form fields to the provided run data
-                _run!.Mileage = Run.Mileage;
-                _run.Duration!.Hours = Run.Duration!.Hours;
-                _run.Duration!.Minutes = Run.Duration!.Minutes;
-                _run.Duration!.Seconds = Run.Duration!.Seconds;
-                _run.Label = Run.Label;
-                _runDate = DateTime.Parse(Run.Label ?? "");
-            }
+            _run!.UserId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
             _httpFunction = _httpClient.PostAsync;
         }
     }
@@ -96,26 +83,30 @@ public partial class RunForm
     /// and updates the form fields accordingly. If the request fails, an error message is logged to the console.
     /// </remarks>
     public async Task InitializeData() {
-
         try {
             string url = "/run/" + RunId;
             using HttpResponseMessage response = await _httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
                 var runResponse = await response.Content.ReadFromJsonAsync<Run>();
-                if (runResponse is null)
+                if (runResponse is not null)
                 {
-                    Console.WriteLine("Failed to load run object with id: {id}", RunId);
+                    _run.Id = runResponse.Id;
+                    _run.UserId = runResponse.UserId;
+                    _run.Mileage = runResponse.Mileage;
+                    _run.Duration = runResponse.Duration;
+                    _run.Label = runResponse.Label;
+                    _run.Date = runResponse.Date;
+                    Console.WriteLine($"Editting Run object: {_run}");
                 }
                 else
                 {
-                    _run = runResponse;
-                    _runDate = DateTime.Parse(_run.Label ?? "");
+                    Console.WriteLine($"Failed to load run object with id: {RunId}");
                 }
             }
             else
             {
-                Console.WriteLine("Failed request run entry for id: {id}", RunId);
+                Console.WriteLine($"Failed request run entry for id: {RunId}");
             }
         }
         catch (Exception ex)
@@ -123,7 +114,6 @@ public partial class RunForm
             Console.WriteLine($"Error in InitializeData: {ex.Message}");
         }
     }
-
 
     /// <summary>
     /// Handles the form submission by sending the run data to the server.
@@ -138,11 +128,11 @@ public partial class RunForm
     /// </remarks>
     public async Task HandleSubmit()
     {
-        if (_run is null)
-            return;
-
-        _run.Label = DateOnly.FromDateTime(_runDate).ToString();
-        _run.UserId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        
+        Console.WriteLine($"Date value: {_run.Date}");
+        Console.WriteLine($"Label value: {_run.Label}");
+        Console.WriteLine($"Mileage value: {_run.Mileage}");
+        Console.WriteLine($"Duration value: {_run.Duration}");
 
         var jsonData = new StringContent(JsonSerializer.Serialize(_run), Encoding.UTF8, "application/json");
         using HttpResponseMessage response = await _httpFunction(_postUrl, jsonData, CancellationToken.None);

@@ -6,6 +6,7 @@ public class Run
     public int UserId { get; set; }
     public double Mileage { get; set; }
     public Duration? Duration { get; set; }
+    public DateTime Date { get; set; }
     public string? Label { get; set; }
 
     public static Duration Pace(Run run)
@@ -22,6 +23,6 @@ public class Run
 
     public override string ToString()
     {
-        return Id + " | " + Mileage + " | " + Duration + "\n" + Label;
+        return Id + " | " + Mileage + " | " + Duration + "\n" + Label + " | " + Date;
     }
 }
