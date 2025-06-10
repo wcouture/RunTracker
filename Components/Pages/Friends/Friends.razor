@@ -1,0 +1,58 @@
+@page "/friends"
+@using System.Security.Claims
+
+<div class="page-content">
+    <div class="content-card">
+        <h1>Friends</h1>
+        <div class="friend-list">
+            @foreach (var friend in _friends) {
+                <div class="friend-card">
+                    <h2>@friend.Username</h2>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Inject]
+    public required IHttpClientFactory HttpClientFactory { get; set; }
+    [CascadingParameter]
+    public required HttpContext HttpContext { get; set; }
+    private List<UserAccount> _friends = new List<UserAccount>();
+    private List<int> _friendIds = new List<int>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (HttpContext?.User?.Identity?.IsAuthenticated ?? false)
+        {   
+            Claim? userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim is null)
+            {
+                Console.WriteLine("No user id claim found");
+                return;
+            }
+            int userId = int.Parse(userIdClaim.Value);
+            var httpClient = HttpClientFactory.CreateClient("RunTracker");
+            var response = await httpClient.GetAsync($"/users/{userId}/friends");
+            if (response.IsSuccessStatusCode)
+            {
+                _friendIds = await response.Content.ReadFromJsonAsync<List<int>>() ?? [];
+                await LoadFriendInfo();
+            }
+        }
+    }
+
+    private async Task LoadFriendInfo() {
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        foreach (var id in _friendIds) {
+            var response = await httpClient.GetAsync($"/users/{id}");
+            if (response.IsSuccessStatusCode) {
+                var friend = await response.Content.ReadFromJsonAsync<UserAccount>();
+                if (friend is not null) {
+                    _friends.Add(friend);
+                }
+            }
+        }
+    }
+}

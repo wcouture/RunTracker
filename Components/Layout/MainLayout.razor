@@ -26,9 +26,9 @@
 <div class="top-row">
     <a class="page-title" href="/">PaceMates</a>
     <div class="nav-links">
-        <a class="" href="/add">Add Run</a>
-        <a class="" href="/plan">Plan</a>
         @if (HttpContext?.User.Identity?.IsAuthenticated ?? false) {
+            <a class="" href="/friends">Friends</a>
+            <a class="" href="/plan">Plan</a>
             <a class="" href="/logout">Logout</a>
         }
     </div>
