@@ -25,55 +25,6 @@ public partial class Home : ComponentBase
     private double _averageDistance { get; set; }
     private double _topDistance { get; set; }
 
-    private LineChart lineChart = default!;
-    private LineChartOptions lineChartOptions = default!;
-    private ChartData chartData = default!;
-
-    private void InitializeChartData()
-    {
-        var labels = new List<string>();
-        var datasets = new List<IChartDataset>();
-
-        var dataset1 = new LineChartDataset()
-        {
-            Data = new List<double?>(),
-            BackgroundColor = ColorUtility.CategoricalTwelveColors[4],
-            BorderColor = ColorUtility.CategoricalTwelveColors[4],
-            BorderWidth = 2,
-            HoverBorderWidth = 4,
-            Datalabels = new() { Alignment = Alignment.End, Anchor = Anchor.End }
-        };
-
-        foreach (Run run in _runList ?? [])
-        {
-            labels.Add(run.Label ?? "RUN");
-            Duration pace = Run.Pace(run);
-            double paceValue = Duration.MinuteValue(pace);
-            paceValue = Math.Round(paceValue, 2);
-            dataset1.Data.Add(paceValue);
-        }
-
-        datasets.Add(dataset1);
-
-        chartData = new ChartData { Labels = labels, Datasets = datasets };
-
-        lineChartOptions = new LineChartOptions();
-        lineChartOptions.Responsive = true;
-        lineChartOptions.Interaction = new Interaction { Mode = InteractionMode.Y };
-        lineChartOptions.IndexAxis = "x";
-        lineChartOptions.Layout.Padding = 0;
-        
-        lineChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Run", Color="grey", Display = true };
-        lineChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Pace (Minutes)", Color="grey", Display = true };
-        lineChartOptions.Scales.X.Grid = new ChartAxesGrid() { Color = "rgba(255, 255, 255, 0.3)" };
-        lineChartOptions.Scales.Y.Grid = new ChartAxesGrid() { Color = "rgba(255, 255, 255, 0.3)" };
-
-        lineChartOptions.Plugins.Legend.Display = false;
-        lineChartOptions.Plugins.Title = new ChartPluginsTitle() { Color="#DDD", Text="Recent Run Paces" };
-        lineChartOptions.Plugins.Title.Display = true;
-        lineChartOptions.Plugins.Datalabels.Color = "white";
-    }
-
     private async Task LoadRunData()
     {
         if (UserId == 0)
@@ -90,7 +41,6 @@ public partial class Home : ComponentBase
             if (response.IsSuccessStatusCode)
             {
                 _runList = await response.Content.ReadFromJsonAsync<IEnumerable<Run>>();
-                InitializeChartData();
                 SetRunStats();
             }
             else
@@ -122,21 +72,6 @@ public partial class Home : ComponentBase
         {
             Console.WriteLine($"Error in OnInitializedAsync: {ex.Message}");
         }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (chartData is null)
-        {
-            await LoadRunData();
-        }
-
-        if (firstRender && chartData is not null && UserId != 0)
-        {
-            await lineChart.InitializeAsync(chartData, lineChartOptions);
-        }
-        
-        await base.OnAfterRenderAsync(firstRender);
     }
 
     private void SetRunStats()
@@ -180,5 +115,10 @@ public partial class Home : ComponentBase
         int seconds = (int)((avgPaceValue - Math.Floor(avgPaceValue)) * 60);
 
         _averagePace = new Duration() { Hours = hours, Minutes = minutes, Seconds = seconds };
+    }
+
+    public void AddRun()
+    {
+        NavManager.NavigateTo("/add");
     }
 }

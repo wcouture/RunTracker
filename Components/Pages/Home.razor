@@ -2,16 +2,9 @@
 @using RunTracker.Models
 
 <PageTitle>Home</PageTitle>
-<div class="page-content">
-    <div class="content-card">
-        <div class="bar-chart">
-        <LineChart Width="350" WidthUnit="Unit.Px" @ref="lineChart" Id="@UserId.ToString()"/>
-        </div>
-    </div>
-    
-
-    <div class="content-card">
-        <p class="content-card-title">Running Statistics</p>
+<div class="page-content">    
+     <div class="content-card">
+        <p class="content-card-title">My Running Stats</p>
 
         <div class="stats-container">
             <div class="stat-box">
@@ -34,29 +27,46 @@
                 <p class="stat-detail">@_topDistance.ToString("N2") mi</p>
             </div>
         </div>
-        
     </div>
 
-    <div class="content-card">
-        <p class="content-card-title">Run Entries</p>
+    <div class="content-card run-entry">
+        <a href="/add" class="create-entry-link">
+            <div class="create-entry-button">
+                <p>Enter new run</p>
+                <Icon Name="IconName.PlusCircle"/>
+            </div>
+            
+        </a>
+    </div>
 
-        <div class="run-entries">
-            <p class="header entry-detail"> </p>
-            <p class="header entry-detail">Edit</p>
-            <p class="header entry-detail">Date</p>
-            <p class="header entry-detail">Label</p>
-            <p class="header entry-detail">Mileage</p>
-            <p class="header entry-detail">Duration</p>
-            <p class="header entry-detail">Pace</p>
-            @foreach (Run run in _runList ?? []) {
-                <p class="entry-detail"><a href="/delete/@run.Id"><Icon Name="IconName.X"/></a></p>
-                <p class="entry-detail"><a href="/edit/@run.Id"><Icon Name="IconName.PencilSquare"/></a></p>
-                <p class="entry-detail">@run.Date.ToString("MM/dd/yyyy")</p>
-                <p class="entry-detail">@run.Label</p>
-                <p class="entry-detail">@run.Mileage mi</p>
-                <p class="entry-detail">@run.Duration</p>
-                <p class="entry-detail">@Run.Pace(run)</p>
-            }
+    @foreach (Run run in _runList ?? []) {
+        <div class="content-card run-entry">
+            <div class="entry-actions">
+                <a href="/edit/@run.Id" class="run-entry-edit"><Icon Name="IconName.PencilSquare"/></a>
+                <a href="/delete/@run.Id" class="run-entry-delete"><Icon Name="IconName.X"/></a>
+            </div>
+            <div class="entry-section">
+                <p class="entry-title"><strong>@run.Label</strong></p>
+            </div>
+            <div class="entry-section">
+                <div class="entry-date">
+                    <Icon Name="IconName.Calendar"/>
+                    <p class="content-card-detail">@run.Date.ToString("MM/dd/yyyy")</p>
+                </div>
+                <div class="entry-mileage">
+                    <Icon Name="IconName.Map"/>
+                    <p class="content-card-detail">@run.Mileage mi</p>
+                </div>
+                <div class="entry-duration">
+                    <Icon Name="IconName.Clock"/>
+                    <p class="content-card-detail">@run.Duration</p>
+                </div>
+                <div class="entry-pace">
+                    <Icon Name="IconName.Speedometer"/>
+                    <p class="content-card-detail">@Run.Pace(run)</p>
+                </div>
+            </div>
         </div>
-    </div>
+    }
+    
 </div>
