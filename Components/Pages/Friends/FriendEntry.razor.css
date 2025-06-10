@@ -1,0 +1,26 @@
+.friend-entry {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.friend-entry p {
+  margin: 0;
+}
+
+.remove-friend-button {
+  background-color: #44455e;
+  color: #ffffff;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: #4a4b61;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out;
+  }
+}

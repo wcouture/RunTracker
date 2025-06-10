@@ -1,0 +1,34 @@
+@using RunTracker.Models
+@rendermode InteractiveServer
+
+@code {
+    [Parameter]
+    public required UserAccount Friend { get; set; }
+    [Parameter]
+    public required int UserId { get; set; }
+
+    [Inject]
+    public required IHttpClientFactory HttpClientFactory { get; set; }
+    [Inject]
+    public required NavigationManager NavigationManager { get; set; }
+
+    private async Task RemoveFriend() {
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        var response = await httpClient.DeleteAsync($"/users/{UserId}/friends/{Friend.Id}");
+        if (response.IsSuccessStatusCode) {
+            Console.WriteLine("Friend removed successfully");
+            NavigationManager.NavigateTo("/friends");
+        } else {
+            Console.WriteLine("Failed to remove friend");
+        }
+    }
+}
+
+<div class="friend-entry">
+    <button class="remove-friend-button" @onclick="RemoveFriend">
+        <Icon Name="IconName.X" />
+    </button>
+    <Icon Name="IconName.PersonCircle" />
+    <p>@Friend.Username</p>
+    <p>@Friend.Email</p>
+</div>

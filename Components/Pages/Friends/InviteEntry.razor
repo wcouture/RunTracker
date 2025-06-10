@@ -1,0 +1,52 @@
+@using RunTracker.Models
+@rendermode InteractiveServer
+
+@code {
+    [Parameter]
+    public required FriendInvite Invite { get; set; }
+    [Inject]
+    public required IHttpClientFactory HttpClientFactory { get; set; }
+    [Inject]
+    public required NavigationManager NavigationManager { get; set; }
+
+    private UserAccount _sender = new UserAccount();
+
+    protected override async Task OnInitializedAsync() {
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        var response = await httpClient.GetAsync($"/users/{Invite.SenderId}");
+        _sender = await response.Content.ReadFromJsonAsync<UserAccount>() ?? new UserAccount();
+    }
+
+    private async Task AcceptInvite() {
+        Console.WriteLine("Accepting invite");
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+
+
+        var response = await httpClient.PutAsync($"/invites/accept/{Invite.ReceiverId}/{Invite.Id}", null);
+        if (response.IsSuccessStatusCode) {
+            Console.WriteLine("Invite accepted");
+            NavigationManager.NavigateTo("/friends");
+        }
+    }
+
+    private async Task RejectInvite() {
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        var response = await httpClient.PutAsync($"/invites/reject/{Invite.ReceiverId}/{Invite.Id}", null);
+        if (response.IsSuccessStatusCode) {
+            Console.WriteLine("Invite rejected");
+            NavigationManager.NavigateTo("/friends");
+        }
+    }
+}
+
+<div class="friend-invite">
+    <Icon Name="IconName.PersonCircle" />
+    <p>@_sender.Username</p>
+    <p>Sent: @Invite.CreatedAt.ToString("MM/dd/yyyy")</p>
+    <button class="invite-button" @onclick="AcceptInvite">
+        <Icon Name="IconName.Check" />
+    </button>
+    <button class="invite-button" @onclick="RejectInvite">
+        <Icon Name="IconName.X" />
+    </button>
+</div>

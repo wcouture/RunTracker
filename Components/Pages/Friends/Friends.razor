@@ -2,13 +2,21 @@
 @using System.Security.Claims
 
 <div class="page-content">
-    <div class="content-card">
-        <h1>Friends</h1>
+    <div class="friend-actions">
+        <a href="/friends/add" class="friend-action-button">
+            <Icon Name="IconName.PersonPlus" />
+            Add Friend
+        </a>
+        <a href="/friends/invites" class="friend-action-button">
+            <Icon Name="IconName.Hourglass" />
+            Requests
+        </a>
+    </div>
+    <div class="content-card friend-list">
+        <h1 class="content-card-title">Friends</h1>
         <div class="friend-list">
             @foreach (var friend in _friends) {
-                <div class="friend-card">
-                    <h2>@friend.Username</h2>
-                </div>
+                <FriendEntry Friend="@friend" UserId="@_userId" />
             }
         </div>
     </div>
@@ -17,10 +25,14 @@
 @code {
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }
+    [Inject]
+    public required NavigationManager NavigationManager { get; set; }
+
     [CascadingParameter]
     public required HttpContext HttpContext { get; set; }
     private List<UserAccount> _friends = new List<UserAccount>();
     private List<int> _friendIds = new List<int>();
+    private int _userId = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -32,9 +44,9 @@
                 Console.WriteLine("No user id claim found");
                 return;
             }
-            int userId = int.Parse(userIdClaim.Value);
+            _userId = int.Parse(userIdClaim.Value);
             var httpClient = HttpClientFactory.CreateClient("RunTracker");
-            var response = await httpClient.GetAsync($"/users/{userId}/friends");
+            var response = await httpClient.GetAsync($"/users/{_userId}/friends");
             if (response.IsSuccessStatusCode)
             {
                 _friendIds = await response.Content.ReadFromJsonAsync<List<int>>() ?? [];

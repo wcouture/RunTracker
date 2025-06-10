@@ -1,0 +1,9 @@
+.friend-invite {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.friend-invite p {
+  margin: 0;
+}

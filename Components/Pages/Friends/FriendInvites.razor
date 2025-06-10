@@ -1,0 +1,36 @@
+@page "/friends/invites"
+@using System.Security.Claims
+
+@code {
+    [Inject]
+    public required IHttpClientFactory HttpClientFactory { get; set; }
+    [CascadingParameter]
+    public required HttpContext HttpContext { get; set; }
+    private List<FriendInvite> _friendInvites = new List<FriendInvite>();
+    private int _userId = 0;
+
+    protected override async Task OnInitializedAsync() {
+        var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null) {
+            Console.WriteLine("No user id claim found");
+            return;
+        }
+        _userId = int.Parse(userIdClaim.Value);
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        var response = await httpClient.GetAsync($"/invites/{_userId}");
+        if (response.IsSuccessStatusCode) {
+            _friendInvites = await response.Content.ReadFromJsonAsync<List<FriendInvite>>() ?? [];
+        }
+    }
+}
+
+<div class="page-content">
+    <div class="content-card">
+        <h1 class="content-card-title">Friend Invites <Icon Name="IconName.Hourglass" /></h1>
+        <div class="friend-invites">
+            @foreach (var invite in _friendInvites) {
+                <InviteEntry Invite="@invite" />
+            }
+        </div>
+    </div>
+</div>
