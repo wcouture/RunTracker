@@ -46,7 +46,7 @@
             }
             _userId = int.Parse(userIdClaim.Value);
             var httpClient = HttpClientFactory.CreateClient("RunTracker");
-            var response = await httpClient.GetAsync($"/users/{_userId}/friends");
+            var response = await httpClient.GetAsync($"/user/friends/all/{_userId}");
             if (response.IsSuccessStatusCode)
             {
                 _friendIds = await response.Content.ReadFromJsonAsync<List<int>>() ?? [];
@@ -58,7 +58,7 @@
     private async Task LoadFriendInfo() {
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
         foreach (var id in _friendIds) {
-            var response = await httpClient.GetAsync($"/users/{id}");
+            var response = await httpClient.GetAsync($"/user/find/{id}");
             if (response.IsSuccessStatusCode) {
                 var friend = await response.Content.ReadFromJsonAsync<UserAccount>();
                 if (friend is not null) {

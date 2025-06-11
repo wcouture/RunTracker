@@ -42,7 +42,7 @@
 
     public async Task HandleRegister() {
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var response = await httpClient.PostAsJsonAsync("/register", UserAccount);
+        var response = await httpClient.PostAsJsonAsync("/user/register", UserAccount);
         if (response.IsSuccessStatusCode) {
             NavManager.NavigateTo("/login");
         }

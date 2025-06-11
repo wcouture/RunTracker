@@ -13,7 +13,7 @@
 
     protected override async Task OnInitializedAsync() {
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var response = await httpClient.GetAsync($"/users/{Invite.SenderId}");
+        var response = await httpClient.GetAsync($"/user/find/{Invite.SenderId}");
         _sender = await response.Content.ReadFromJsonAsync<UserAccount>() ?? new UserAccount();
     }
 

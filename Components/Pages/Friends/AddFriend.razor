@@ -22,7 +22,7 @@
 
     private async Task HandleSubmit() {
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var response = await httpClient.GetAsync($"/search/{_searchQuery?.Username}");
+        var response = await httpClient.GetAsync($"/user/search/{_searchQuery?.Username}");
         if (response.IsSuccessStatusCode) {
             _searchResults = await response.Content.ReadFromJsonAsync<List<UserAccount>>() ?? new List<UserAccount>();
         } else {

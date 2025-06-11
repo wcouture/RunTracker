@@ -40,7 +40,7 @@
 
     public async Task HandleLogin() {
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var response = await httpClient.PostAsJsonAsync("/login", UserAccount);
+        var response = await httpClient.PostAsJsonAsync("/user/login", UserAccount);
         if (response.IsSuccessStatusCode) {
             UserAccount newAccount = await response.Content.ReadFromJsonAsync<UserAccount>() ?? new UserAccount();
             List<Claim> claims = new List<Claim> {

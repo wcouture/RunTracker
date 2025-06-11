@@ -16,7 +16,7 @@
         FriendInvite newInvite = new() { SenderId = UserId, ReceiverId = User.Id, Status = FriendInviteStatus.Pending, CreatedAt = DateTime.UtcNow };
         
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var response = await httpClient.PostAsJsonAsync("/invite", newInvite);
+        var response = await httpClient.PostAsJsonAsync("/invites/create", newInvite);
         if (response.IsSuccessStatusCode) {
             Console.WriteLine("Friend invite sent");
             NavigationManager.NavigateTo("/friends");

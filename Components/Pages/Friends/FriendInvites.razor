@@ -17,7 +17,7 @@
         }
         _userId = int.Parse(userIdClaim.Value);
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var response = await httpClient.GetAsync($"/invites/{_userId}");
+        var response = await httpClient.GetAsync($"/invites/user/{_userId}");
         if (response.IsSuccessStatusCode) {
             _friendInvites = await response.Content.ReadFromJsonAsync<List<FriendInvite>>() ?? [];
         }

@@ -45,7 +45,7 @@ public partial class RunForm
 
     // Private fields
     private string _formHeader = "Add Run";
-    private string _postUrl = "/run";
+    private string _httpUrl = "/run/create";
     private HttpClient _httpClient = null!;
     private Func<string?, HttpContent?, CancellationToken, Task<HttpResponseMessage>> _httpFunction = null!;
 
@@ -63,7 +63,7 @@ public partial class RunForm
         if (RunId != 0)
         {
             await InitializeData();
-            _postUrl = $"/run/{RunId}";
+            _httpUrl = $"/run/update/{RunId}";
             _httpFunction = _httpClient.PutAsync;
             _formHeader = "Edit Run";
         }
@@ -84,7 +84,7 @@ public partial class RunForm
     /// </remarks>
     public async Task InitializeData() {
         try {
-            string url = "/run/" + RunId;
+            string url = "/run/find/" + RunId;
             using HttpResponseMessage response = await _httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
@@ -135,7 +135,7 @@ public partial class RunForm
         Console.WriteLine($"Duration value: {_run.Duration}");
 
         var jsonData = new StringContent(JsonSerializer.Serialize(_run), Encoding.UTF8, "application/json");
-        using HttpResponseMessage response = await _httpFunction(_postUrl, jsonData, CancellationToken.None);
+        using HttpResponseMessage response = await _httpFunction(_httpUrl, jsonData, CancellationToken.None);
         if (response.IsSuccessStatusCode)
         {
             NavManager.NavigateTo("/");

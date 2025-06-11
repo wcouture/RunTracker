@@ -36,7 +36,7 @@ public partial class Home : ComponentBase
         {
             var httpClient = HttpClientFactory.CreateClient("RunTracker");
 
-            using HttpResponseMessage response = await httpClient.GetAsync($"/runs/{UserId}");
+            using HttpResponseMessage response = await httpClient.GetAsync($"/runs/user/{UserId}");
 
             if (response.IsSuccessStatusCode)
             {
