@@ -2,37 +2,8 @@
 @using RunTracker.Components
 @using RunTracker.Components.Forms
 @using System.Security.Claims
+
 @rendermode InteractiveServer
-
-@code {
-    [Parameter]
-    public required int UserId { get; set; }
-
-    class SearchQuery {
-        public string? Username {get;set;}
-    }
-
-    [CascadingParameter]
-    public required HttpContext HttpContext { get; set; }
-    [Inject]
-    public required IHttpClientFactory HttpClientFactory { get; set; }
-
-    private SearchQuery? _searchQuery {get;set;}  = new() {Username = ""};
-    private List<UserAccount> _searchResults = new List<UserAccount>();
-
-    private async Task HandleSubmit() {
-        var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var response = await httpClient.GetAsync($"/user/search/{_searchQuery?.Username}");
-        if (response.IsSuccessStatusCode) {
-            _searchResults = await response.Content.ReadFromJsonAsync<List<UserAccount>>() ?? new List<UserAccount>();
-        } else {
-            Console.WriteLine("Failed to search for friends");
-            Console.WriteLine(response.StatusCode);
-            Console.WriteLine(response.ReasonPhrase);
-            Console.WriteLine(await response.Content.ReadAsStringAsync());
-        }
-    }
-}
 
 <div class="page-contnet">
     <div class="content-card">
@@ -53,3 +24,33 @@
     </div>
     }
 </div>
+
+@code {
+    [Parameter]
+    public required int UserId { get; set; }
+    class SearchQuery {
+        public string? Username {get;set;}
+    }
+
+    [CascadingParameter]
+    public required HttpContext HttpContext { get; set; }
+    [Inject]
+    public required IHttpClientFactory HttpClientFactory { get; set; }
+
+    [SupplyParameterFromForm]
+    private SearchQuery? _searchQuery {get;set;} = new() {Username = ""};
+    private List<UserAccount> _searchResults = new List<UserAccount>();
+
+    private async Task HandleSubmit() {
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        var response = await httpClient.GetAsync($"/user/search/{_searchQuery?.Username}");
+        if (response.IsSuccessStatusCode) {
+            _searchResults = await response.Content.ReadFromJsonAsync<List<UserAccount>>() ?? new List<UserAccount>();
+        } else {
+            Console.WriteLine("Failed to search for friends");
+            Console.WriteLine(response.StatusCode);
+            Console.WriteLine(response.ReasonPhrase);
+            Console.WriteLine(await response.Content.ReadAsStringAsync());
+        }
+    }
+}

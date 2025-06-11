@@ -1,0 +1,42 @@
+.run-entry {
+  min-width: 35%;
+}
+
+.run-entry:hover {
+  box-shadow: none;
+}
+
+.entry-section {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.entry-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.entry-detail {
+  flex: 1;
+  text-align: start;
+  border-top: 1px solid rgba(137, 137, 137, 0.218);
+  padding: 0 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.entry-detail.header {
+  font-weight: normal;
+  margin-bottom: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .entry-detail {
+    font-size: 10pt;
+  }
+}
+
+a {
+  color: inherit;
+}

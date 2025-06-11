@@ -1,0 +1,57 @@
+@page "/feed"
+@using System.Security.Claims
+@using RunTracker.Models
+@using RunTracker.Components
+
+<div class="page-content">
+    <div class="content-card">
+        <h1 class="content-card-title">Feed</h1>
+    </div>
+    @foreach (var run in _runs) {
+        <RunCard Run="@run" IsFriend="@(run.UserId != _userId)"/>
+    }
+</div>
+
+@code {
+    [Inject]
+    public required IHttpClientFactory HttpClientFactory { get; set; }
+
+    [CascadingParameter]
+    public required HttpContext HttpContext { get; set; }
+
+    private int _userId = 0;
+    private List<int> _friendIds = [];
+
+    private List<Run> _runs = [];
+
+    protected override async Task OnInitializedAsync() {
+        var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null) {
+            Console.WriteLine("No user id claim found");
+            return;
+        }
+        _userId = int.Parse(userIdClaim.Value);
+
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        var response = await httpClient.GetAsync($"/user/friends/all/{_userId}");
+        if (response.IsSuccessStatusCode) {
+            _friendIds = await response.Content.ReadFromJsonAsync<List<int>>() ?? [];
+            _friendIds.Add(_userId);
+            await GetRuns();
+        }
+    }
+
+    private async Task GetRuns() {
+        Console.WriteLine("Getting runs");
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        _runs = [];
+        foreach (var friendId in _friendIds) {
+            var response = await httpClient.GetAsync($"/runs/user/{friendId}");
+            if (response.IsSuccessStatusCode) {
+                var runs = await response.Content.ReadFromJsonAsync<List<Run>>() ?? [];
+                _runs.AddRange(runs);
+            }
+        }
+        _runs.Sort((a, b) => b.Date.CompareTo(a.Date));
+    }
+}

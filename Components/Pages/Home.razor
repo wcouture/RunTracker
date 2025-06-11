@@ -40,33 +40,7 @@
     </div>
 
     @foreach (Run run in _runList ?? []) {
-        <div class="content-card run-entry">
-            <div class="entry-actions">
-                <a href="/edit/@run.Id" class="run-entry-edit"><Icon Name="IconName.PencilSquare"/></a>
-                <a href="/delete/@run.Id" class="run-entry-delete"><Icon Name="IconName.X"/></a>
-            </div>
-            <div class="entry-section">
-                <p class="entry-title"><strong>@run.Label</strong></p>
-            </div>
-            <div class="entry-section">
-                <div class="entry-date">
-                    <Icon Name="IconName.Calendar"/>
-                    <p class="content-card-detail">@run.Date.ToString("MM/dd/yyyy")</p>
-                </div>
-                <div class="entry-mileage">
-                    <Icon Name="IconName.Map"/>
-                    <p class="content-card-detail">@run.Mileage mi</p>
-                </div>
-                <div class="entry-duration">
-                    <Icon Name="IconName.Clock"/>
-                    <p class="content-card-detail">@run.Duration</p>
-                </div>
-                <div class="entry-pace">
-                    <Icon Name="IconName.Speedometer"/>
-                    <p class="content-card-detail">@Run.Pace(run)</p>
-                </div>
-            </div>
-        </div>
+        <RunCard Run="@run"/>
     }
     
 </div>

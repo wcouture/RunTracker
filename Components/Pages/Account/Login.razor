@@ -15,11 +15,11 @@
         <EditForm class="account-form" FormName="LoginForm" OnSubmit="HandleLogin" Model="@UserAccount">
             <div class="account-form-group">
                 <label for="email">Email</label>
-                <InputText class="custom-input" required @bind-Value="UserAccount.Email" placeholder="email"/>
+                <InputText class="custom-input account" required @bind-Value="UserAccount.Email" placeholder="email"/>
             </div>
             <div class="account-form-group">
                 <label for="password">Password</label>
-                <InputText class="custom-input" type="password" required @bind-Value="UserAccount.Password" placeholder="password"/>
+                <InputText class="custom-input account" type="password" required @bind-Value="UserAccount.Password" placeholder="password"/>
             </div>
             <button type="submit" class="form-button">Login</button>
         </EditForm>

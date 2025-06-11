@@ -114,6 +114,10 @@ button:hover {
   transition: linear 0.2s;
 }
 
+.custom-input.account {
+  width: 100%;
+}
+
 .custom-input:focus {
   border-color: #363636;
   outline: none;
