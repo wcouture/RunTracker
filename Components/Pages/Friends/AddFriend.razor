@@ -1,0 +1,55 @@
+@page "/friends/add/{UserId:int}"
+@using RunTracker.Components
+@using RunTracker.Components.Forms
+@using System.Security.Claims
+@rendermode InteractiveServer
+
+@code {
+    [Parameter]
+    public required int UserId { get; set; }
+
+    class SearchQuery {
+        public string? Username {get;set;}
+    }
+
+    [CascadingParameter]
+    public required HttpContext HttpContext { get; set; }
+    [Inject]
+    public required IHttpClientFactory HttpClientFactory { get; set; }
+
+    private SearchQuery? _searchQuery {get;set;}  = new() {Username = ""};
+    private List<UserAccount> _searchResults = new List<UserAccount>();
+
+    private async Task HandleSubmit() {
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        var response = await httpClient.GetAsync($"/search/{_searchQuery?.Username}");
+        if (response.IsSuccessStatusCode) {
+            _searchResults = await response.Content.ReadFromJsonAsync<List<UserAccount>>() ?? new List<UserAccount>();
+        } else {
+            Console.WriteLine("Failed to search for friends");
+            Console.WriteLine(response.StatusCode);
+            Console.WriteLine(response.ReasonPhrase);
+            Console.WriteLine(await response.Content.ReadAsStringAsync());
+        }
+    }
+}
+
+<div class="page-contnet">
+    <div class="content-card">
+        <h1 class="content-card-title">Add Friends</h1>
+        <div class="content-card-content">
+            <EditForm FormName="AddFriendForm" OnSubmit="HandleSubmit" Model="@_searchQuery">
+                <TextInput class="custom-input" @bind-Value="_searchQuery!.Username" />
+                <button class="form-button" type="submit">Search</button>
+            </EditForm>
+        </div>
+    </div>
+    @if (_searchResults.Count > 0) {
+    <div style="margin-top: 1rem;" class="content-card">
+        <h2 class="content-card-title">Send Invite</h2>
+        @foreach (var result in _searchResults) {
+            <ResultEntry User="@result" UserId="@UserId"/>
+        }
+    </div>
+    }
+</div>

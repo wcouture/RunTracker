@@ -1,0 +1,27 @@
+@using RunTracker.Models
+@using RunTracker.Components
+
+@code {
+    [Parameter]
+    public required UserAccount User { get; set; }
+    [Parameter]
+    public required int UserId { get; set; }
+
+    [Inject]
+    public required IHttpClientFactory HttpClientFactory { get; set; }
+    [Inject]
+    public required NavigationManager NavigationManager { get; set; }
+
+    private async Task AddFriend() {
+        Console.WriteLine($"Adding friend: {User.Username}");
+        Console.WriteLine($"User ID: {UserId}");
+        var httpClient = HttpClientFactory.CreateClient("RunTracker");
+        
+    }
+}
+
+<div class="search-result">
+    <Icon Name="IconName.PersonCircle"/>
+    <p>@User.Username</p>
+    <button class="send-invite-button" @onclick="AddFriend"><Icon Name="IconName.ArrowRight"/></button>
+</div>
