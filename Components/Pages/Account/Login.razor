@@ -1,10 +1,6 @@
 @page "/login"
-@using System.Security.Claims
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Authentication.Cookies
-@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using RunTracker.Models
+@using RunTracker.Services
 @inject NavigationManager NavManager
 
 <div class="page-content">
@@ -30,25 +26,18 @@
 
 @code {
     [Inject]
-    public required ProtectedSessionStorage ProtectedSessionStorage { get; set; }
-
-    [Inject]
-    public required IHttpClientFactory HttpClientFactory { get; set; }
+    public required IAuthenticationService AuthenticationService { get; set; }
 
     [SupplyParameterFromForm]
     public UserAccount UserAccount { get; set; } = new UserAccount();
 
     public async Task HandleLogin() {
-        var httpClient = HttpClientFactory.CreateClient("RunTracker");
-        var response = await httpClient.PostAsJsonAsync("/user/login", UserAccount);
-        if (response.IsSuccessStatusCode) {
-            UserAccount newAccount = await response.Content.ReadFromJsonAsync<UserAccount>() ?? new UserAccount();
-            await ProtectedSessionStorage.SetAsync("authToken", newAccount.Id.ToString());
-
+        var result = await AuthenticationService.Login(UserAccount.Email ?? "", UserAccount.Password ?? "");
+        if (result.Success) {
             NavManager.NavigateTo("/");
         }
         else {
-            Console.WriteLine(response.StatusCode);
+            Console.WriteLine(result.ErrorMessage);
         }
     }
 }

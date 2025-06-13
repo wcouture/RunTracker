@@ -1,5 +1,5 @@
 @page "/logout"
-@using Microsoft.AspNetCore.Authentication
+@using RunTracker.Services
 
 <div class="page-content">
     <div class="content-card">
@@ -16,12 +16,15 @@
     public required NavigationManager NavManager { get; set; }
 
     [Inject]
-    public required ProtectedSessionStorage ProtectedSessionStorage { get; set; }
+    public required IAuthenticationService AuthenticationService { get; set; }
 
     protected override async Task OnInitializedAsync() {
-        var authToken = await ProtectedSessionStorage.GetAsync<string>("authToken");
-        if (authToken.Value is not null) {
-            await ProtectedSessionStorage.DeleteAsync("authToken");
+        var result = await AuthenticationService.Logout();
+        if (result.Success) {
+            NavManager.NavigateTo("/login");
+        }
+        else {
+            Console.WriteLine(result.ErrorMessage);
         }
     }
 }

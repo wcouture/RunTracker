@@ -25,6 +25,7 @@ builder.Services.AddBlazorBootstrap();
 
 // Add password hasher service
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddHttpClient("RunTracker", (serviceProvider, httpClient) =>
 {
