@@ -12,16 +12,16 @@
 </div>
 
 @code {
-    [CascadingParameter]
-    public HttpContext? HttpContext { get; set; }
-
     [Inject]
     public required NavigationManager NavManager { get; set; }
 
+    [Inject]
+    public required ProtectedSessionStorage ProtectedSessionStorage { get; set; }
+
     protected override async Task OnInitializedAsync() {
-        if (HttpContext?.User.Identity?.IsAuthenticated ?? false) {
-            await HttpContext.SignOutAsync();
-            NavManager.NavigateTo("/logout", true);
+        var authToken = await ProtectedSessionStorage.GetAsync<string>("authToken");
+        if (authToken.Value is not null) {
+            await ProtectedSessionStorage.DeleteAsync("authToken");
         }
     }
 }

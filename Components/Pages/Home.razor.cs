@@ -3,6 +3,7 @@ using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
 using System.Security.Claims;
 using RunTracker.Components.Layout;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace RunTracker.Components.Pages;
 
@@ -14,8 +15,9 @@ public partial class Home : ComponentBase
     [Inject]
     public required NavigationManager NavManager { get; set; }
 
-    [CascadingParameter]
-    public HttpContext? HttpContext { get; set; }
+    [Inject]
+    public required ProtectedSessionStorage ProtectedSessionStorage { get; set; }
+
     public int UserId {get; set;}
 
     private IEnumerable<Run>? _runList;
@@ -54,23 +56,15 @@ public partial class Home : ComponentBase
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        try
-        {
-            if (HttpContext?.User?.Identity?.IsAuthenticated ?? false)
-            {   
-                Claim? userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-                if (userIdClaim is not null)
-                {
-                    UserId = int.Parse(userIdClaim.Value);
-                    await LoadRunData();
-                }
+        if (firstRender) {
+            var authToken = await ProtectedSessionStorage.GetAsync<string>("authToken");
+            if (authToken.Value is not null) {
+                UserId = int.Parse(authToken.Value);
+                await LoadRunData();
+                StateHasChanged();
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error in OnInitializedAsync: {ex.Message}");
         }
     }
 

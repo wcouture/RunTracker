@@ -1,4 +1,4 @@
-@page "/friends/add/{UserId:int}"
+@page "/friends/add"
 @using RunTracker.Components
 @using RunTracker.Components.Forms
 @using System.Security.Claims
@@ -19,27 +19,34 @@
     <div style="margin-top: 1rem;" class="content-card">
         <h2 class="content-card-title">Send Invite</h2>
         @foreach (var result in _searchResults) {
-            <ResultEntry User="@result" UserId="@UserId"/>
+            <ResultEntry User="@result" UserId="@_userId"/>
         }
     </div>
     }
 </div>
 
 @code {
-    [Parameter]
-    public required int UserId { get; set; }
     class SearchQuery {
         public string? Username {get;set;}
     }
 
-    [CascadingParameter]
-    public required HttpContext HttpContext { get; set; }
+    [Inject]
+    public required ProtectedSessionStorage ProtectedSessionStorage { get; set; }
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }
 
     [SupplyParameterFromForm]
     private SearchQuery? _searchQuery {get;set;} = new() {Username = ""};
     private List<UserAccount> _searchResults = new List<UserAccount>();
+    private int _userId = 0;
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender) {
+            var authToken = await ProtectedSessionStorage.GetAsync<string>("authToken");
+            if (authToken.Value is not null) {
+                _userId = int.Parse(authToken.Value);
+            }
+        }
+    }
 
     private async Task HandleSubmit() {
         var httpClient = HttpClientFactory.CreateClient("RunTracker");

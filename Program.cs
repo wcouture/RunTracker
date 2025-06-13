@@ -11,17 +11,17 @@ builder.Services.AddRazorComponents()
 builder.Services.AddServerSideBlazor();
 
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options => {
-        options.Cookie.Name = "RunTrackerAuth";
-        options.LoginPath = "/login";
-        options.AccessDeniedPath = "/access-denied";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
-    });
+// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//     .AddCookie(options => {
+//         options.Cookie.Name = "RunTrackerAuth";
+//         options.LoginPath = "/login";
+//         options.AccessDeniedPath = "/access-denied";
+//         options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+//     });
 
 builder.Services.AddBlazorBootstrap();
-builder.Services.AddAuthorization();
-builder.Services.AddCascadingAuthenticationState();
+// builder.Services.AddAuthorization();
+// builder.Services.AddCascadingAuthenticationState();
 
 // Add password hasher service
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
@@ -50,8 +50,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+// app.UseAuthentication();
+// app.UseAuthorization();
 
 app.UseAntiforgery();
 

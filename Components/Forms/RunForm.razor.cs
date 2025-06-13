@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using RunTracker.Models;
 
 namespace RunTracker.Components.Forms;
@@ -27,14 +28,15 @@ namespace RunTracker.Components.Forms;
 /// </remarks>
 public partial class RunForm
 {
-    [CascadingParameter]
-    public required HttpContext HttpContext { get; set; }
     // Injects and dependencies
     [Inject]
     public required NavigationManager NavManager { get; set; }
 
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }
+
+    [Inject]
+    public required ProtectedSessionStorage ProtectedSessionStorage { get; set; }
 
     // Parameters
     [Parameter]
@@ -69,8 +71,12 @@ public partial class RunForm
         }
         else
         {
-            _run!.UserId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var authToken = await ProtectedSessionStorage.GetAsync<string>("authToken");
+            if (authToken.Value is not null) {
+                _run!.UserId = int.Parse(authToken.Value);
+            }
             _httpFunction = _httpClient.PostAsync;
+            StateHasChanged();
         }
     }
 

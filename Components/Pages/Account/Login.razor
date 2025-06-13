@@ -29,8 +29,8 @@
 
 
 @code {
-    [CascadingParameter]
-    public required HttpContext HttpContext { get; set; }
+    [Inject]
+    public required ProtectedSessionStorage ProtectedSessionStorage { get; set; }
 
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }
@@ -43,14 +43,7 @@
         var response = await httpClient.PostAsJsonAsync("/user/login", UserAccount);
         if (response.IsSuccessStatusCode) {
             UserAccount newAccount = await response.Content.ReadFromJsonAsync<UserAccount>() ?? new UserAccount();
-            List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.Name, UserAccount.Username ?? ""),
-                new Claim(ClaimTypes.NameIdentifier, newAccount.Id.ToString() ?? ""),
-                new Claim(ClaimTypes.Role, "User")
-            };
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(principal);
+            await ProtectedSessionStorage.SetAsync("authToken", newAccount.Id.ToString());
 
             NavManager.NavigateTo("/");
         }

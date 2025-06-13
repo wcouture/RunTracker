@@ -4,22 +4,22 @@
 @code {
     [Inject]
     public required IHttpClientFactory HttpClientFactory { get; set; }
-    [CascadingParameter]
-    public required HttpContext HttpContext { get; set; }
+    [Inject]
+    public required ProtectedSessionStorage ProtectedSessionStorage { get; set; }
+
     private List<FriendInvite> _friendInvites = new List<FriendInvite>();
     private int _userId = 0;
 
     protected override async Task OnInitializedAsync() {
-        var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null) {
-            Console.WriteLine("No user id claim found");
-            return;
+        var authToken = await ProtectedSessionStorage.GetAsync<string>("authToken");
+        if (authToken.Value is not null) {
+            _userId = int.Parse(authToken.Value);
         }
-        _userId = int.Parse(userIdClaim.Value);
         var httpClient = HttpClientFactory.CreateClient("RunTracker");
         var response = await httpClient.GetAsync($"/invites/user/{_userId}");
         if (response.IsSuccessStatusCode) {
             _friendInvites = await response.Content.ReadFromJsonAsync<List<FriendInvite>>() ?? [];
+            StateHasChanged();
         }
     }
 }

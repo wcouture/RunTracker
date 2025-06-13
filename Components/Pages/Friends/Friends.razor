@@ -3,7 +3,7 @@
 
 <div class="page-content">
     <div class="friend-actions">
-        <a href="/friends/add/@_userId" class="friend-action-button">
+        <a href="/friends/add" class="friend-action-button">
             <Icon Name="IconName.PersonPlus" />
             Add Friend
         </a>
@@ -28,29 +28,26 @@
     [Inject]
     public required NavigationManager NavigationManager { get; set; }
 
-    [CascadingParameter]
-    public required HttpContext HttpContext { get; set; }
+    [Inject]
+    public required ProtectedSessionStorage ProtectedSessionStorage { get; set; }
     private List<UserAccount> _friends = new List<UserAccount>();
     private List<int> _friendIds = new List<int>();
     private int _userId = 0;
 
     protected override async Task OnInitializedAsync()
     {
-        if (HttpContext?.User?.Identity?.IsAuthenticated ?? false)
-        {   
-            Claim? userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim is null)
-            {
-                Console.WriteLine("No user id claim found");
-                return;
-            }
-            _userId = int.Parse(userIdClaim.Value);
+        var authToken = await ProtectedSessionStorage.GetAsync<string>("authToken");
+        if (authToken.Value is not null) {
+            _userId = int.Parse(authToken.Value);
+        }
+        if (_userId != 0) {
             var httpClient = HttpClientFactory.CreateClient("RunTracker");
             var response = await httpClient.GetAsync($"/user/friends/all/{_userId}");
             if (response.IsSuccessStatusCode)
             {
                 _friendIds = await response.Content.ReadFromJsonAsync<List<int>>() ?? [];
                 await LoadFriendInfo();
+                StateHasChanged();
             }
         }
     }

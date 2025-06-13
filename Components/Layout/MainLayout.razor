@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 
 @code {
     [CascadingParameter]
@@ -9,15 +10,36 @@
     [Inject]
     public required NavigationManager NavManager { get; set; }
 
-    protected override void OnInitialized() {
-        if (!HttpContext?.User.Identity?.IsAuthenticated ?? true) {
-            if (NavManager.Uri.Contains("/access-denied") || 
+    [Inject]
+    public required ProtectedSessionStorage ProtectedSessionStorage { get; set; }
+
+    private bool _isAuthenticated = false;
+
+    private async Task<bool> IsAuthenticated() {
+        var authToken = await ProtectedSessionStorage.GetAsync<string>("authToken");
+        return authToken.Value is not null;
+    }
+
+    private bool OnAccountPages() {
+        return NavManager.Uri.Contains("/access-denied") || 
                 NavManager.Uri.Contains("/login") || 
                 NavManager.Uri.Contains("/logout") || 
                 NavManager.Uri.Contains("/register") || 
-                NavManager.Uri.Contains("/intro")) {
-                return;
-            }
+                NavManager.Uri.Contains("/intro");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (await IsAuthenticated()) {
+            _isAuthenticated = true;
+            StateHasChanged();
+            return;
+        }
+        else if (OnAccountPages()) {
+            _isAuthenticated = false;
+            StateHasChanged();
+            return;
+        }
+        else {
             NavManager.NavigateTo("/intro", true);
         }
     }
@@ -26,7 +48,7 @@
 <div class="top-row">
     <a class="page-title" href="/">PaceMates</a>
     <div class="nav-links">
-        @if (HttpContext?.User.Identity?.IsAuthenticated ?? false) {
+        @if (_isAuthenticated) {
             <a class="" href="/friends">Friends</a>
             <a class="" href="/plan">Plan</a>
             <a class="" href="/logout">Logout</a>
