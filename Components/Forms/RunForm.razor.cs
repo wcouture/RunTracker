@@ -134,12 +134,6 @@ public partial class RunForm
     /// </remarks>
     public async Task HandleSubmit()
     {
-        
-        Console.WriteLine($"Date value: {_run.Date}");
-        Console.WriteLine($"Label value: {_run.Label}");
-        Console.WriteLine($"Mileage value: {_run.Mileage}");
-        Console.WriteLine($"Duration value: {_run.Duration}");
-
         var jsonData = new StringContent(JsonSerializer.Serialize(_run), Encoding.UTF8, "application/json");
         using HttpResponseMessage response = await _httpFunction(_httpUrl, jsonData, CancellationToken.None);
         if (response.IsSuccessStatusCode)

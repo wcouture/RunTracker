@@ -4,22 +4,45 @@ using RunTracker.Models;
 
 namespace RunTracker.Services;
 
+// <summary>
+// The AuthenticationService is used to authenticate users and manage user accounts
+// </summary>
 public class AuthenticationService : IAuthenticationService
 {
+    // <summary>
+    // The HttpClient to use to make requests to the server
+    // </summary>
     private readonly HttpClient _httpClient;
+
+    // <summary>
+    // The ProtectedSessionStorage to use to store the authToken
+    // </summary>
     private readonly ProtectedSessionStorage _protectedSessionStorage;
 
+    // <summary>
+    // Constructor for the AuthenticationService
+    // </summary>
+    // <param name="HttpClientFactory">The HttpClientFactory to use to create the HttpClient</param>
+    // <param name="ProtectedSessionStorage">The ProtectedSessionStorage to use to store the authToken</param>
     public AuthenticationService(IHttpClientFactory HttpClientFactory, ProtectedSessionStorage ProtectedSessionStorage)
     {
         _httpClient = HttpClientFactory.CreateClient("RunTracker");
         _protectedSessionStorage = ProtectedSessionStorage;
     }
 
+    // <summary>
+    // Checks if the user is authenticated by checking if the authToken is set in the session storage
+    // </summary>
+    // <returns>A boolean indicating if the user is authenticated</returns>
     public async Task<bool> IsAuthenticated() {
         var authToken = await _protectedSessionStorage.GetAsync<string>("authToken");
         return authToken.Value is not null;
     }
 
+    // <summary>
+    // Gets the current user by getting the authToken from the session storage and using it to make a request to the server
+    // </summary>
+    // <returns>An AuthenticationResult containing the success status and the user account if successful</returns>
     public async Task<AuthenticationResult> GetCurrentUser() {
         var authToken = await _protectedSessionStorage.GetAsync<string>("authToken");
         if (authToken.Value is not null) {
@@ -46,6 +69,12 @@ public class AuthenticationService : IAuthenticationService
         }
     }
 
+    // <summary>
+    // Logs in a user by making a request to the server to get the user account
+    // </summary>
+    // <param name="email">The email of the user</param>
+    // <param name="password">The password of the user</param>
+    // <returns>An AuthenticationResult containing the success status and the user account if successful</returns>
     public async Task<AuthenticationResult> Login(string email, string password)
     {
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) {
@@ -84,6 +113,13 @@ public class AuthenticationService : IAuthenticationService
         }
     }
 
+    // <summary>
+    // Registers a user by making a request to the server to create a new user account
+    // </summary>
+    // <param name="username">The username of the user</param>
+    // <param name="email">The email of the user</param>
+    // <param name="password">The password of the user</param>
+    // <returns>An AuthenticationResult containing the success status</returns>
     public async Task<AuthenticationResult> Register(string username, string email, string password)
     {
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) {
@@ -113,6 +149,10 @@ public class AuthenticationService : IAuthenticationService
         }
     }
 
+    // <summary>
+    // Logs out a user by deleting the authToken from the session storage
+    // </summary>
+    // <returns>An AuthenticationResult containing the success status</returns>
     public async Task<AuthenticationResult> Logout()
     {
         var authToken = await _protectedSessionStorage.GetAsync<string>("authToken");
